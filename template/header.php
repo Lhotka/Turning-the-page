@@ -1,5 +1,6 @@
 <?php
     session_start();
+    require_once __DIR__ . '/vendor/autoload.php';
 
     // Dynamically determine the base path
     $basePath = $_SERVER['DOCUMENT_ROOT'] . '/FINAL';
