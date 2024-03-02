@@ -1,0 +1,37 @@
+<?php
+    $title = "Edit Publisher";
+    require_once "../template/header.php";
+    checkAdmin();
+
+    if (isset($_GET['publisherid'])) {
+        $publisherid = $_GET['publisherid'];
+    } else {
+        echo "Empty query! GET parameters: " . print_r($_GET, true);
+        exit;
+    }
+
+    // get publisher data
+    $query = "SELECT * FROM publisher WHERE publisherid = '$publisherid'";
+    $result = mysqli_query($conn, $query);
+
+    if (!$result || mysqli_num_rows($result) == 0) {
+        echo "Publisher not found!";
+        exit;
+    }
+
+    $publisher = mysqli_fetch_assoc($result);
+?>
+
+<h2>Edit Publisher</h2>
+
+<form method="post" action="">
+    <input type="hidden" name="publisherid" value="<?php echo $publisher['publisherid']; ?>">
+    <label for="publisher_name">Publisher Name:</label>
+    <input type="text" name="publisher_name" value="<?php echo $publisher['publisher_name']; ?>" required>
+    <input type="submit" name="save_change" value="Save Changes" class="btn btn-success">
+</form>
+
+
+<?php
+    require_once "../template/footer.php";
+?>

@@ -1,0 +1,83 @@
+<?php
+    require_once "./functions/database_functions.php";
+    $book_isbn = $_GET['bookisbn'];
+
+    $conn = db_connect();
+
+    $query = "SELECT * FROM books WHERE book_isbn = '$book_isbn'";
+    $result = mysqli_query($conn, $query);
+    if (!$result) {
+        echo "Can't retrieve data " . mysqli_error($conn);
+        exit;
+    }
+
+    $row = mysqli_fetch_assoc($result);
+    if (!$row) {
+        echo "Empty book";
+        exit;
+    }
+
+    $title = $row['book_title'];
+    require_once "./template/header.php";
+?>
+
+<p class="lead" style="margin: 25px 0"><a href="books.php">All Books</a> > <?php echo $row['book_title']; ?></p>
+<div class="row">
+    <div class="col-md-3 text-center">
+        <img class="img-responsive img-thumbnail" src="./bootstrap/img/<?php echo $row['book_image']; ?>">
+    </div>
+    <div class="col-md-6">
+
+        <h4>Book Details</h4>
+        <table class="table">
+            <?php foreach ($row as $key => $value) {
+                if ($key == "book_descr" || $key == "book_image" || $key == "book_title") {
+                    continue;
+                }
+                switch ($key) {
+                    case "book_isbn":
+                        $key = "ISBN";
+                        break;
+                    case "book_title":
+                        $key = "Title";
+                        break;
+                    case "book_author":
+                        $key = "Author";
+                        break;
+                    case "book_price":
+                        $key = "Price";
+                        break;
+                    case "publisherid":
+                        $key = "Publisher";
+                        $value = getPubName($conn, $value);
+                        break;
+                }
+            ?>
+                <tr>
+                    <td><?php echo $key; ?></td>
+                    <td><?php echo $value; ?></td>
+                </tr>
+            <?php
+            }
+            ?>
+        </table>
+        <form method="post" action="cart.php">
+            <input type="hidden" name="bookisbn" value="<?php echo $book_isbn; ?>">
+            <input type="submit" value="Add to cart" name="cart" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+<br/>
+<div class="row ">
+<h4>Book Description</h4>
+        <p class="justified-text"><?php echo $row['book_descr']; ?></p>
+</div>
+<style>
+    .justified-text {
+        text-align: justify;
+    }
+</style>
+
+<?php
+    require "./template/footer.php";
+?>
