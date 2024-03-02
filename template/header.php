@@ -8,11 +8,6 @@
     require_once $basePath . '/functions/database_functions.php';
     require_once $basePath . '/functions/admin.php';
 
-   //require_once './functions/database_functions.php';
-   //require_once "./functions/admin.php";
-
-
-
    // Determine the base URL dynamically
    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
    $baseUrl = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/FINAL';

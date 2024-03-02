@@ -73,6 +73,6 @@
         // Redirect to the specified location
         header("Location: bookedit.php?bookisbn=$isbn");
     }
-    require "../template/footer.php"
+    require "../template/footer.php";
 
-?>
+

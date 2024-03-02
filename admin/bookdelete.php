@@ -13,4 +13,3 @@
 	header("Location: book.php");
 
     require_once "../template/footer.php";
-?>

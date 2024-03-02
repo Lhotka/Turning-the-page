@@ -7,4 +7,3 @@
   require_once "./template/latest_books.php";
 
   require_once "./template/footer.php";
-?>
