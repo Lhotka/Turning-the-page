@@ -14,12 +14,12 @@ $mail = new PHPMailer(true);
 
 try {
     // Server settings
-    $mail->SMTPDebug = 2; // Enable debugging for detailed information
+    $mail->SMTPDebug = 3; // Enable debugging for detailed information
     $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
     $mail->Username   = getenv('GMAIL_USERNAME');
-    $mail->Password   = 'xtug rjww zqxi yxhq'; // Use the actual password here
+    $mail->Password   = trim(getenv('GMAIL_PASSWORD'), '"');
     $mail->SMTPSecure = 'tls';
     $mail->Port       = 587;
 
@@ -38,4 +38,3 @@ try {
 } catch (Exception $e) {
     echo 'Mailer Error: ' . $mail->ErrorInfo;
 }
-?>
