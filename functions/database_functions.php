@@ -316,4 +316,3 @@ function addUser($conn, $email, $username, $password)
 
     return true;
 }
-?>
