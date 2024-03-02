@@ -1,9 +1,12 @@
 <?php
-$title="Process Contact";
+$title = "Process Contact";
+require_once __DIR__ . '/vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset($_POST["textArea"])) {
     $userEmail = $_POST["inputEmail"];
@@ -17,9 +20,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
         header("Location: " . $_SERVER['HTTP_REFERER'] . "?error=empty_fields");
         exit();
     }
-
-    // Initialize PHPMailer
-    require_once 'vendor/autoload.php';
     
     $dotenvFilePath = 'C:\xampp\htdocs\FINAL\.env';
 
@@ -35,27 +35,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
     } catch (\Dotenv\Exception\InvalidPathException $e) {
         die('Error: Unable to load the .env file. ' . $e->getMessage());
     }
-    
-
-    // Debugging: Print loaded environment variables
-    echo '<pre>';
-    print_r($_ENV);
-    echo '</pre>';
 
     $mail = new PHPMailer(true);
 
-//Server settings
+    // Server settings
     try {
+        $mail->SMTPDebug = 3;
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = getenv('GMAIL_USERNAME');
-        $mail->Password   = trim(getenv('GMAIL_PASSWORD'));
+        $mail->Username   = $_ENV['GMAIL_USERNAME'];
+        $mail->Password   = trim($_ENV['GMAIL_PASSWORD']);        
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
         // Recipients
-        $mail->setFrom($userEmail);
-        $mail->addAddress('filip.lhotka@gmail.com'); // Replace with admin's email address
+        $mail->setFrom($userEmail, $userEmail);
+        $mail->addAddress('filip.lhotka@gmail.com'); // Admin's email address
 
         // Content
         $mail->isHTML(true);
@@ -66,12 +61,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
         $mail->send();
 
         // Set success message and redirect
-        header("Location: " . $_SERVER['HTTP_REFERER'] . "?thanks=1");
+        $_SESSION['success_message'] = 'Email sent successfully';
+        header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     } catch (Exception $e) {
-        // Set error message and redirect
-        echo 'Mailer Error: ' . $mail->ErrorInfo;
-        //header("Location: " . $_SERVER['HTTP_REFERER'] . "?error=mail_failed");
+        // Set error message
+        $_SESSION['error_message'] = 'Failed to send email';
+        header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     }    
 } else {
@@ -79,4 +75,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
     header("Location: contact.php");
     exit();
 }
-?>

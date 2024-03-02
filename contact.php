@@ -1,20 +1,13 @@
 <?php
 $title = "Contact";
 require_once "./template/header.php";
+
 ?>
 
 <div class="row">
     <div class="col-md-3"></div>
     <div class="col-md-6 text-center">
-        <?php
-        // Check if there's an error parameter in the URL
-        if (isset($_GET['error'])) {
-            $error = $_GET['error'];
-            echo '<div class="alert alert-danger" role="alert">Error: ' . $error . '</div>';
-        }
-        ?>
-
-        <form class="form-horizontal" action="process_contact.php" method="post">
+        <form class="form-horizontal" action="contactprocess.php" method="post">
             <fieldset>
                 <legend>Contact</legend>
                 <div class="form-group">
@@ -42,5 +35,17 @@ require_once "./template/header.php";
 </div>
 
 <?php
+// Check for success message
+if (isset($_SESSION['success_message'])) {
+    echo '<div class="alert alert-success" role="alert">' . $_SESSION['success_message'] . '</div>';
+    unset($_SESSION['success_message']); // Clear the message to prevent displaying it again
+}
+
+// Check for error message
+if (isset($_SESSION['error_message'])) {
+    echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error_message'] . '</div>';
+    unset($_SESSION['error_message']); // Clear the message to prevent displaying it again
+}
+
 require_once "./template/footer.php";
 ?>

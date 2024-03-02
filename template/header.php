@@ -1,9 +1,9 @@
 <?php
     session_start();
-    require_once __DIR__ . '/vendor/autoload.php';
 
     // Dynamically determine the base path
     $basePath = $_SERVER['DOCUMENT_ROOT'] . '/FINAL';
+
     // Use the base path to include other files
     require_once $basePath . '/functions/database_functions.php';
     require_once $basePath . '/functions/admin.php';

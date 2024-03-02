@@ -18,8 +18,8 @@ try {
     $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
-    $mail->Username   = getenv('GMAIL_USERNAME');
-    $mail->Password   = trim(getenv('GMAIL_PASSWORD'), '"');
+    $mail->Username   = $_ENV['GMAIL_USERNAME'];
+    $mail->Password   = trim($_ENV['GMAIL_PASSWORD'], '"');
     $mail->SMTPSecure = 'tls';
     $mail->Port       = 587;
 
@@ -36,5 +36,7 @@ try {
     $mail->send();
     echo 'Test email sent!';
 } catch (Exception $e) {
+    echo $_ENV['GMAIL_USERNAME'];
     echo 'Mailer Error: ' . $mail->ErrorInfo;
 }
+?>
