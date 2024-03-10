@@ -11,7 +11,6 @@ function db_connect()
 function checkAndResizeImage($sourcePath, $targetWidth)
 // Check and resize image if needed, also check that it's less than 5MB
 {
-
     // Fix the maximum file size to 5MB
     $maxFileSizeBytes = 5 * 1024 * 1024; // 5MB in bytes
 
@@ -178,7 +177,7 @@ function setUserId($name, $address, $city, $zip_code, $country)
 	function selectLatestBooks($conn)
     {
 		$row = array();
-        $query = "SELECT book_isbn, book_image FROM books ORDER BY date_added DESC LIMIT 4";
+        $query = "SELECT book_isbn, book_image FROM book ORDER BY date_added DESC LIMIT 4";
 		$result = mysqli_query($conn, $query);
 		if(!$result){
 		    echo "Can't retrieve data " . mysqli_error($conn);
@@ -190,16 +189,26 @@ function setUserId($name, $address, $city, $zip_code, $country)
 		return $row;
 	}
 
-	function getBookByIsbn($conn, $isbn)
+    function getAuthorsByISBN($conn, $isbn)
     {
-		$query = "SELECT book_title, book_author, book_price FROM books WHERE book_isbn = '$isbn'";
-		$result = mysqli_query($conn, $query);
-		if(!$result){
-			echo "Can't retrieve data " . mysqli_error($conn);
-			exit;
-		}
-		return $result;
-	}
+        $query = "SELECT a.author_name FROM book_author ba
+                  JOIN author a ON ba.author_id = a.author_id
+                  WHERE ba.book_isbn = '$isbn'";
+    
+        $result = mysqli_query($conn, $query);
+    
+        if (!$result) {
+            echo "Can't retrieve data " . mysqli_error($conn);
+            exit;
+        }
+    
+        $authors = array();
+        while ($row = mysqli_fetch_assoc($result)) {
+            $authors[] = $row['author_name'];
+        }
+    
+        return $authors;
+    }
 
 	function getOrderId($conn, $id)
     {
@@ -229,7 +238,7 @@ function setUserId($name, $address, $city, $zip_code, $country)
 	function getbookprice($isbn)
     {
 		$conn = db_connect();
-		$query = "SELECT book_price FROM books WHERE book_isbn = '$isbn'";
+		$query = "SELECT book_price FROM book WHERE book_isbn = '$isbn'";
 		$result = mysqli_query($conn, $query);
 		if(!$result){
 			echo "get book price failed! " . mysqli_error($conn);
@@ -270,9 +279,59 @@ function setUserId($name, $address, $city, $zip_code, $country)
     return $result;
 }
 
+function getAllBooks($conn, $sortingOption = 'latest')
+{
+    $allowedSortingOptions = ['latest', 'popular', 'alphabetical_asc', 'alphabetical_desc', 'price_asc', 'price_desc', 'rating'];
+
+    // Validate the sorting option
+    if (!in_array($sortingOption, $allowedSortingOptions)) {
+        $sortingOption = 'latest'; // Default to 'latest' if an invalid option is provided
+    }
+
+    $orderBy = '';
+
+    switch ($sortingOption) {
+        case 'popular':
+            $orderBy = 'b.book_sold DESC'; // Assuming there's a column for sale number
+            break;
+        case 'alphabetical_asc':
+            $orderBy = 'b.book_title ASC';
+            break;
+        case 'alphabetical_desc':
+            $orderBy = 'b.book_title DESC';
+            break;
+        case 'price_asc':
+            $orderBy = 'b.book_price ASC';
+            break;
+        case 'price_desc':
+            $orderBy = 'b.book_price DESC';
+            break;
+        case 'rating':
+            $orderBy = 'b.book_rating DESC'; // Assuming 'book_rating' is the column for ratings
+            break;
+        default:
+            $orderBy = 'b.date_added DESC'; // Default to 'latest'
+    }
+
+    $query = "SELECT b.*, GROUP_CONCAT(a.author_name SEPARATOR ', ') AS authors
+              FROM book b
+              LEFT JOIN book_author ba ON b.book_isbn = ba.book_isbn
+              LEFT JOIN author a ON ba.author_id = a.author_id
+              GROUP BY b.book_isbn
+              ORDER BY $orderBy";
+
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        echo "Can't retrieve data " . mysqli_error($conn);
+        exit;
+    }
+
+    return $result;
+}
 function getAll($conn)
 {
-    $query = "SELECT * from books ORDER BY book_isbn DESC";
+    $query = "SELECT * from book ORDER BY book_isbn DESC";
     $result = mysqli_query($conn, $query);
     if (!$result) {
         echo "Can't retrieve data " . mysqli_error($conn);
@@ -280,6 +339,7 @@ function getAll($conn)
     }
     return $result;
 }
+
 function isEmailExists($email)
 {
     $conn = db_connect();
@@ -315,4 +375,27 @@ function addUser($conn, $email, $username, $password)
     }
 
     return true;
+}
+
+function getBookByIsbn($conn, $isbn)
+{
+    $isbn = mysqli_real_escape_string($conn, $isbn);
+
+    $query = "SELECT b.*, GROUP_CONCAT(a.author_name SEPARATOR ', ') AS authors
+              FROM book b
+              LEFT JOIN book_author ba ON b.book_isbn = ba.book_isbn
+              LEFT JOIN author a ON ba.author_id = a.author_id
+              WHERE b.book_isbn = '$isbn'
+              GROUP BY b.book_isbn";
+
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        echo "Error getting book details: " . mysqli_error($conn);
+        exit;
+    }
+
+    $book = mysqli_fetch_assoc($result);
+
+    return $book;
 }

@@ -11,7 +11,8 @@
    // Determine the base URL dynamically
    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
    $baseUrl = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/FINAL';
-   
+   $faviconPath = $baseUrl . '/bootstrap/img/favicon.ico';
+
     global $conn;
     $conn = db_connect();
 
@@ -30,9 +31,9 @@
     <title><?php echo $title; ?></title>
     
     <!-- Favicon -->
-    
-    <link rel="icon" href="../bootstrap/img/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="icon" href="<?php echo $faviconPath; ?>" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo $faviconPath; ?>" type="image/x-icon">
 
     <!-- Dynamic paths for CSS -->
     <link href="<?php echo $baseUrl; ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet">

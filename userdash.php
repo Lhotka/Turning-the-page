@@ -34,7 +34,7 @@ if ($userID) {
     ?>
 
     <div class="container">
-        <h2>Welcome, <?php echo $username; ?>!</h2>
+        <h2>Welcome <?php echo $username; ?>!</h2>
 
         <h3>User Settings</h3>
         <p>Email: <?php echo $email; ?></p>

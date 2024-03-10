@@ -44,7 +44,7 @@
 <!-- Form for adding a new publisher -->
 <form method="post" action="">
     <label for="new_publisher_name">New Publisher Name:</label>
-    <input type="text" name="new_publisher_name" required>
+    <input type="text" id="new_publisher_name" name="new_publisher_name" required>
     <button type="submit" name="add_publisher" class="btn btn-success">Add Publisher</button>
 </form>
 

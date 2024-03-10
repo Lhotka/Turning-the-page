@@ -1,0 +1,28 @@
+ADD
+filter/query by author, price, ...
+search bar
+reviews
+sortiranje knjig in filtri
+zaloga knjig (book)
+user dashboard settings
+davek (razlicni davki vrsta knjig)
+popust (knjiga ali stranka št nakupov)
+Admin dashboard missing other elements
+dvojezično z cookiji
+Book quantity 
+Type of book
+
+FIX
+order line not fully finished
+shipping - ship_country (raje izbira namesto vnosa)
+Remove date ed in book page
+
+FINISH
+publisher edit complete
+user edit page complete
+dopolni footer
+
+MySQL user:
+CREATE USER 'username'@'localhost' IDENTIFIED BY 'Q$UGk8vGjuf#dXtkx8gh';
+
+GRANT ALL PRIVILEGES ON database_name.* TO 'new_user'@'localhost';

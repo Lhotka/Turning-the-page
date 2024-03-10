@@ -20,6 +20,22 @@
     }
 
     $publisher = mysqli_fetch_assoc($result);
+
+    // Handle form submission
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_change'])) {
+        $newPublisherName = mysqli_real_escape_string($conn, $_POST['publisher_name']);
+
+        // Update the publisher's name in the database
+        $updateQuery = "UPDATE publisher SET publisher_name = '$newPublisherName' WHERE publisherid = '$publisherid'";
+        $updateResult = mysqli_query($conn, $updateQuery);
+
+        if ($updateResult) {
+            echo "Publisher name updated successfully!";
+            // You might want to redirect to another page after successful update
+        } else {
+            echo "Error updating publisher name: " . mysqli_error($conn);
+        }
+    }
 ?>
 
 <h2>Edit Publisher</h2>
@@ -30,7 +46,6 @@
     <input type="text" name="publisher_name" value="<?php echo $publisher['publisher_name']; ?>" required>
     <input type="submit" name="save_change" value="Save Changes" class="btn btn-success">
 </form>
-
 
 <?php
     require_once "../template/footer.php";

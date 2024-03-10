@@ -1,12 +1,12 @@
 <?php
 $title = "Process Contact";
-require_once __DIR__ . '/vendor/autoload.php';
+require_once "./template/header.php";
+require 'vendor/autoload.php';
+//require_once __DIR__ . '/vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-
-session_start();
+//use PHPMailer\PHPMailer\SMTP;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset($_POST["textArea"])) {
     $userEmail = $_POST["inputEmail"];
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
 
     // Server settings
     try {
-        $mail->SMTPDebug = 3;
+        $mail->SMTPDebug = 2;
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = $_ENV['GMAIL_USERNAME'];
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
 
         // Recipients
         $mail->setFrom($userEmail, $userEmail);
-        $mail->addAddress('filip.lhotka@gmail.com'); // Admin's email address
+        $mail->addAddress('filip.lhotka@gmail.com'); // Admin/recipient email address
 
         // Content
         $mail->isHTML(true);
@@ -65,11 +65,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     } catch (Exception $e) {
+        // Log the error message for debugging
+        $errorLog = fopen('error_log.txt', 'a');
+        fwrite($errorLog, date('Y-m-d H:i:s') . ' Error: ' . $e->getMessage() . PHP_EOL);
+        fclose($errorLog);
+    
         // Set error message
         $_SESSION['error_message'] = 'Failed to send email';
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
-    }    
+    }
+    
+    
 } else {
     // If the form is not submitted via POST or keys are not set, redirect to the contact page
     header("Location: contact.php");
