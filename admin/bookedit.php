@@ -16,7 +16,7 @@
     }
 
     // get book data
-    $query = "SELECT * FROM books WHERE book_isbn = '$book_isbn'";
+    $query = "SELECT * FROM book WHERE book_isbn = '$book_isbn'";
     $result = mysqli_query($conn, $query);
     if (!$result) {
         echo "Can't retrieve data " . mysqli_error($conn);
@@ -36,11 +36,47 @@
         </tr>
         <tr>
             <th>Author</th>
-            <td><input type="text" name="author" value="<?php echo $row['book_author']; ?>" required></td>
+            <td>
+                <select name="new_author" required>
+                    <?php
+                    // Fetch all authors from the database
+                    $allAuthors = getAllAuthors($conn);
+
+                    // Loop through authors and populate the dropdown
+                    foreach ($allAuthors as $author) {
+                        $authorId = $author['author_id'];
+                        $authorName = $author['author_name'];
+
+                        // Check if the author is the current author of the book
+                        $isSelected = ($authorId == $row['author_id']) ? 'selected' : '';
+
+                        echo "<option value='$authorId' $isSelected>$authorName</option>";
+                    }
+                    ?>
+                </select>
+            </td>
         </tr>
         <tr>
             <th>Publisher</th>
-            <td><input type="text" name="publisher" value="<?php echo getPubName($conn, $row['publisherid']); ?>" required></td>
+            <td>
+                <select name="new_publisher" required>
+                    <?php
+                    // Fetch all publishers from the database
+                    $allPublishers = getAllPublishers($conn);
+
+                    // Loop through publishers and populate the dropdown
+                    foreach ($allPublishers as $publisher) {
+                        $publisherId = $publisher['publisher_id'];
+                        $publisherName = $publisher['publisher_name'];
+
+                        // Check if the publisher is the current publisher of the book
+                        $isSelected = ($publisherId == $row['publisher_id']) ? 'selected' : '';
+
+                        echo "<option value='$publisherId' $isSelected>$publisherName</option>";
+                    }
+                    ?>
+                </select>
+            </td>
         </tr>
         <tr>
             <th>Image</th>

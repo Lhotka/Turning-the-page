@@ -251,7 +251,7 @@ function setUserId($name, $address, $city, $zip_code, $country)
 
 	function getPubName($conn, $pubid)
     {
-		$query = "SELECT publisher_name FROM publisher WHERE publisherid = '$pubid'";
+		$query = "SELECT publisher_name FROM publisher WHERE publisher_id = '$pubid'";
 		$result = mysqli_query($conn, $query);
 		if(!$result){
 			echo "Can't retrieve data " . mysqli_error($conn);
@@ -398,4 +398,30 @@ function getBookByIsbn($conn, $isbn)
     $book = mysqli_fetch_assoc($result);
 
     return $book;
+}
+function getAllAuthors($conn)
+{
+    $query = "SELECT * FROM author";
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        echo "Can't retrieve data: " . mysqli_error($conn);
+        exit;
+    }
+
+    $authors = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $authors[] = $row;
+    }
+
+    return $authors;
+}
+function countWords($text) {
+    // Remove HTML tags and trim whitespaces
+    $cleanText = trim(strip_tags($text));
+
+    // Count words
+    $wordCount = str_word_count($cleanText);
+
+    return $wordCount;
 }

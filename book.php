@@ -55,7 +55,7 @@ require_once "./template/header.php";
             </tr>
             <tr>
                 <td>Publisher</td>
-                <td><?php echo getPubName($conn, $row['publisherid']); ?></td>
+                <td><?php echo getPubName($conn, $row['publisher_id']); ?></td>
             </tr>
         </table>
 

@@ -77,7 +77,7 @@
                         <a href="useredit.php?userid=<?php echo $user['id']; ?>" class="btn btn-warning">Edit</a>
                         
                         <!-- Delete Button -->
-                        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="display: inline-block;">
+                        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="display: inline-block">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="userid" value="<?php echo $user['id']; ?>">
                             <button type="submit" class="btn btn-danger">Delete</button>

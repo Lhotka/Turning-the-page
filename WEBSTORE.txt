@@ -11,6 +11,12 @@ Admin dashboard missing other elements
 dvojezično z cookiji
 Book quantity 
 Type of book
+Published: 03/07/2008
+ISBN: 9780141036144
+Length: 336 pages
+Dimensions: 181mm x 20mm x 111mm
+Weight: 184g
+Price: £8.99
 
 FIX
 order line not fully finished

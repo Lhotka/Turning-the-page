@@ -3,15 +3,15 @@
     require_once "../template/header.php";
     checkAdmin();
 
-    if (isset($_GET['publisherid'])) {
-        $publisherid = $_GET['publisherid'];
+    if (isset($_GET['publisher_id'])) {
+        $publisherid = $_GET['publisher_id'];
     } else {
         echo "Empty query! GET parameters: " . print_r($_GET, true);
         exit;
     }
 
     // get publisher data
-    $query = "SELECT * FROM publisher WHERE publisherid = '$publisherid'";
+    $query = "SELECT * FROM publisher WHERE publisher_id = '$publisherid'";
     $result = mysqli_query($conn, $query);
 
     if (!$result || mysqli_num_rows($result) == 0) {
@@ -26,7 +26,7 @@
         $newPublisherName = mysqli_real_escape_string($conn, $_POST['publisher_name']);
 
         // Update the publisher's name in the database
-        $updateQuery = "UPDATE publisher SET publisher_name = '$newPublisherName' WHERE publisherid = '$publisherid'";
+        $updateQuery = "UPDATE publisher SET publisher_name = '$newPublisherName' WHERE publisher_id = '$publisherid'";
         $updateResult = mysqli_query($conn, $updateQuery);
 
         if ($updateResult) {
@@ -41,7 +41,7 @@
 <h2>Edit Publisher</h2>
 
 <form method="post" action="">
-    <input type="hidden" name="publisherid" value="<?php echo $publisher['publisherid']; ?>">
+    <input type="hidden" name="publisher_id" value="<?php echo $publisher['publisher_id']; ?>">
     <label for="publisher_name">Publisher Name:</label>
     <input type="text" name="publisher_name" value="<?php echo $publisher['publisher_name']; ?>" required>
     <input type="submit" name="save_change" value="Save Changes" class="btn btn-success">

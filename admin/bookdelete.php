@@ -3,13 +3,26 @@
     $title="Book deletion";
     require "../template/header.php";
     checkAdmin();
+    
+    // Delete related rows in book_author first
+    $deleteBookAuthorQuery = "DELETE FROM book_author WHERE book_isbn = '$book_isbn'";
+    $deleteBookAuthorResult = mysqli_query($conn, $deleteBookAuthorQuery);
 
-	$query = "DELETE FROM books WHERE book_isbn = '$book_isbn'";
-	$result = mysqli_query($conn, $query);
-	if(!$result){
-		echo "delete data unsuccessfully " . mysqli_error($conn);
-		exit;
-	}
-	header("Location: book.php");
+    if (!$deleteBookAuthorResult) {
+        echo "Error deleting related book_author rows: " . mysqli_error($conn);
+        exit;
+    }
+
+    // Now, delete the row in the book table
+    $deleteBookQuery = "DELETE FROM book WHERE book_isbn = '$book_isbn'";
+    $deleteBookResult = mysqli_query($conn, $deleteBookQuery);
+
+    if (!$deleteBookResult) {
+        echo "Error deleting book row: " . mysqli_error($conn);
+        exit;
+    }
+
+    header("Location: book.php");
+
 
     require_once "../template/footer.php";

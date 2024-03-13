@@ -27,7 +27,7 @@
         $deletePublisherID = $_POST['delete_publisher_id'];
         
         // Delete the selected publisher from the database
-        $deleteQuery = "DELETE FROM publisher WHERE publisherid = '$deletePublisherID'";
+        $deleteQuery = "DELETE FROM publisher WHERE publisher_id = '$deletePublisherID'";
         $deleteResult = mysqli_query($conn, $deleteQuery);
 
         if(!$deleteResult) {
@@ -53,20 +53,20 @@
     <tr>
         <th>Publisher ID</th>
         <th>Publisher Name</th>
-        <th></th>
-        <th></th>
-        <!-- Add other columns if needed -->
+        <th>Action</th>
     </tr>
     <?php
     while ($row = mysqli_fetch_assoc($result)) {
     ?>
         <tr>
-            <td><?php echo $row['publisherid']; ?></td>
+            <td><?php echo $row['publisher_id']; ?></td>
             <td><?php echo $row['publisher_name']; ?></td>
-            <td><a href="publisheredit.php?publisherid=<?php echo $row['publisherid']; ?>" class="btn btn-warning">Edit</a></td>
             <td>
-                <form method="post" action="">
-                    <input type="hidden" name="delete_publisher_id" value="<?php echo $row['publisherid']; ?>">
+                <!-- Edit Button -->
+                <a href="publisheredit.php?publisher_id=<?php echo $row['publisher_id']; ?>" class="btn btn-warning">Edit</a>
+                <!-- Delete Button -->
+                <form method="post" action="" style="display: inline-block">
+                    <input type="hidden" name="delete_publisher_id" value="<?php echo $row['publisher_id']; ?>">
                     <button type="submit" name="delete_publisher" class="btn btn-danger">Delete</button>
                 </form>
             </td>

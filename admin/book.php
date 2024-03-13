@@ -29,10 +29,10 @@
             <td><?php echo $row['book_isbn']; ?></td>
             <td><?php echo $row['book_title']; ?></td>
             <td><?php echo implode(', ', $authors); ?></td>
-            <td><?php echo getPubName($conn, $row['publisherid']); ?></td>
+            <td><?php echo getPubName($conn, $row['publisher_id']); ?></td>
             <td><?php echo $row['book_image']; ?></td>
-            <!-- limit description's character output -->
-            <td><?php echo substr($row['book_descr'], 0, 20) . (strlen($row['book_descr']) > 200 ? '...' : ''); ?></td>
+            <!-- Display word count or EMPTY if description is empty -->
+            <td><?php echo empty($row['book_descr']) ? 'EMPTY' : countWords($row['book_descr']); ?> words</td>
             <td><?php echo $row['book_price']."€"; ?></td>
             <td><a href="bookedit.php?bookisbn=<?php echo $row['book_isbn']; ?>">Edit</a></td>
             <td><a style="color:red" href="bookdelete.php?bookisbn=<?php echo $row['book_isbn']; ?>">Delete</a></td>
