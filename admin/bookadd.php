@@ -4,18 +4,19 @@ require "../template/header.php";
 checkAdmin();
 
 if (isset($_POST['add'])) {
-    $isbn = trim($_POST['isbn']);
-    $title = trim($_POST['title']);
-    $authorId = $_POST['author'];
-    $newAuthorName = trim($_POST['new_author']);
-    $descr = trim($_POST['descr']);
+    // Get the book data from the form
+    $isbn = mysqli_real_escape_string($conn, trim($_POST['isbn']));
+    $title = mysqli_real_escape_string($conn, trim($_POST['title']));
+    $authorId = mysqli_real_escape_string($conn, trim($_POST['author']));
+    $newAuthorName = mysqli_real_escape_string($conn, trim($_POST['new_author']));
+    $publisher = mysqli_real_escape_string($conn, trim($_POST['publisher']));
+    $newPublisherName = mysqli_real_escape_string($conn, trim($_POST['new_publisher']));
+    $descr = mysqli_real_escape_string($conn, trim($_POST['descr']));
     $price = floatval(trim($_POST['price']));
-    $publisher = trim($_POST['publisher']);
-    $newPublisherName = trim($_POST['new_publisher']);
 
     // Validate input
-    if (empty($isbn) || empty($title) || empty($authorId) || empty($descr) || empty($price)) {
-        echo "All fields are required or format is wrong?";
+    if (empty($isbn) || empty($title) || empty($authorId) || empty($publisher) || empty($descr) || empty($price) ) {
+        echo "All fields are required";
         exit;
     }
 
@@ -28,8 +29,6 @@ if (isset($_POST['add'])) {
         exit;
     }
 
-    // Validate and sanitize publisher name
-    $publisher = mysqli_real_escape_string($conn, $publisher);
 
     // Check if the publisher already exists
     $checkPublisherQuery = "SELECT * FROM publisher WHERE publisher_name = '$publisher'";
@@ -164,15 +163,15 @@ if (isset($_POST['add'])) {
     <form method="post" action="bookadd.php" enctype="multipart/form-data">
         <table class="table">
             <tr>
-                <th>ISBN</th>
+                <th style="vertical-align: middle;">ISBN</th>
                 <td><input type="text" name="isbn" required></td>
             </tr>
             <tr>
-                <th>Title</th>
+                <th style="vertical-align: middle;">Title</th>
                 <td><input type="text" name="title" required></td>
             </tr>
             <tr>
-                <th>Author</th>
+                <th style="vertical-align: middle;">Author</th>
                 <td>
                     <select name="author" required>
                         <option value="new_author" selected>ADD NEW AUTHOR</option>
@@ -192,7 +191,7 @@ if (isset($_POST['add'])) {
                 </td>
             </tr>
             <tr>
-                <th>Publisher</th>
+                <th style="vertical-align: middle;">Publisher</th>
                 <td>
                     <select name="publisher" required>
                         <option value="new_publisher" selected>ADD NEW PUBLISHER</option>
@@ -211,24 +210,27 @@ if (isset($_POST['add'])) {
                 </td>
             </tr>
             <tr>
-                <th>Image</th>
-                <td><input type="file" name="image"></td>
+                <th style="vertical-align: middle;">Image</th>
+                <td><input type="file" name="image" accept="image/*"></td>
             </tr>
             <tr>
-                <th>Description</th>
+                <th style="vertical-align: middle;">Description</th>
                 <td><textarea id="descriptionTextarea" name="descr" cols="60" rows="5"></textarea></td>
             </tr>
             <tr>
-                <th>Price</th>
+                <th style="vertical-align: middle;">Price</th>
                 <td><input type="text" name="price" required></td>
             </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" name="add" value="Add book" class="btn btn-success">
+                    <input type="reset" value="Reset" class="btn btn-danger">
+                    <a href="book.php" class="btn btn-default">Go back</a>
+                </td>
+            </tr>
         </table>
-        <input type="submit" name="add" value="Add book" class="btn btn-primary">
-        <input type="reset" value="Reset" class="btn btn-danger">
-        <a href="book.php" class="btn btn-default">Go back</a>
     </form>
 
-	<br/>
 <script>
     // Function to toggle visibility and position of the input for writing new author or publisher
     function toggleNewInput(selectElement, inputElement) {
@@ -255,13 +257,13 @@ if (isset($_POST['add'])) {
         const textInputs = document.querySelectorAll('input[type="text"]');
         textInputs.forEach(input => {
             input.style.width = 'auto';
-            input.style.width = input.scrollWidth + '10 px';
+            input.style.width = input.scrollWidth + 'px';
         });
 
         // Resize textarea
         const textarea = document.getElementById('descriptionTextarea');
         textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + '10 px';
+        textarea.style.height = textarea.scrollHeight + 'px';
     }
 
     // Attach the function to text inputs and textarea's input event

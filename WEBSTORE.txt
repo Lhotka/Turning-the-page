@@ -17,6 +17,7 @@ Length: 336 pages
 Dimensions: 181mm x 20mm x 111mm
 Weight: 184g
 Price: £8.99
+In stock, out of stock..
 
 FIX
 order line not fully finished

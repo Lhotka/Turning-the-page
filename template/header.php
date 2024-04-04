@@ -16,9 +16,10 @@
     global $conn;
     $conn = db_connect();
 
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
     $_SESSION['err'] = 1;
     error_reporting(E_ALL);
-    ini_set('display_errors', 1);
 ?>
 
 <!DOCTYPE html>

@@ -8,7 +8,8 @@
 <div class="lead">
     <a href="user.php" class="btn btn-info" style="display: inline-block; margin-right: 10px;">User Management</a>
     <a href="book.php" class="btn btn-warning" style="display: inline-block; margin-right: 10px;">Book Management</a>
-    <a href="publisher.php" class="btn btn-warning" style="display: inline-block;">Publisher Management</a>
+    <a href="author.php" class="btn btn-warning" style="display: inline-block; margin-right: 10px;">Author Management</a>
+    <a href="publisher.php" class="btn btn-warning" style="display: inline-block; margin-right: 10px;">Publisher Management</a>
 </div>
 
 <?php

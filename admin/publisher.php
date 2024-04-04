@@ -3,9 +3,6 @@
     require_once "../template/header.php";
     checkAdmin();
 
-    // Assuming $conn is already established
-    $result = getAllPublishers($conn);
-
     // Handle form submission for adding a new publisher
     if(isset($_POST['add_publisher'])) {
         $newPublisherName = trim($_POST['new_publisher_name']);
@@ -32,10 +29,10 @@
 
         if(!$deleteResult) {
             echo "Error deleting publisher: " . mysqli_error($conn);
-        } else {
-            echo "Publisher deleted successfully!";
         }
     }
+
+    $result = getAllPublishers($conn);
 ?>
     <h2>Publisher Management</h2>
 

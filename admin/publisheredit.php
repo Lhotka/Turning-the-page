@@ -44,7 +44,7 @@
     <input type="hidden" name="publisher_id" value="<?php echo $publisher['publisher_id']; ?>">
     <label for="publisher_name">Publisher Name:</label>
     <input type="text" name="publisher_name" value="<?php echo $publisher['publisher_name']; ?>" required>
-    <input type="submit" name="save_change" value="Save Changes" class="btn btn-success">
+    <input type="submit" name="save_change" value="Save changes" class="btn btn-success">
 </form>
 
 <?php
