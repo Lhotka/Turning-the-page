@@ -2,6 +2,7 @@
 $title = "Edit User";
 require_once "../template/header.php";
 checkAdmin();
+$conn=db_connect();
 
 // Ensure a userid is provided in the query string
 if (!isset($_GET['userid'])) {

@@ -2,6 +2,7 @@
 $title = "Edit Publisher";
 require_once "../template/header.php";
 checkAdmin();
+$conn=db_connect();
 
 if (isset($_GET['publisher_id'])) {
     $publisherid = $_GET['publisher_id'];

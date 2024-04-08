@@ -13,9 +13,6 @@ $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : '
 $baseUrl = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/FINAL';
 $faviconPath = $baseUrl . '/bootstrap/img/favicon.ico';
 
-global $conn;
-$conn = db_connect();
-
 // Error reporting
 ini_set('display_errors', 1); // Disable displaying errors on production - 0
 ini_set('display_startup_errors', 1);

@@ -1,4 +1,6 @@
 <?php
+$conn=db_connect();
+
 // Preveri, ali je ime avtorja podano v URL parametru
 if (isset($_GET['name'])) {
     // Pridobi ime avtorja iz URL parametra

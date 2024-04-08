@@ -2,6 +2,8 @@
 $title = "Registration verification";
 require_once "./template/header.php";
 
+$conn=db_connect();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
     // Retrieve user input
     $newEmail = filter_input(INPUT_POST, 'new_email', FILTER_SANITIZE_EMAIL);

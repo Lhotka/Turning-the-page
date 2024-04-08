@@ -2,6 +2,7 @@
 $title = "User Management";
 require_once "../template/header.php";
 checkAdmin();
+$conn=db_connect();
 
 // Check if form submitted for user actions (add, edit, delete)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

@@ -1,6 +1,7 @@
 <?php
 $title = "Admin Dashboard";
 require_once "../template/header.php";
+$conn=db_connect();
 checkAdmin();
 $result = getAll($conn);
 ?>

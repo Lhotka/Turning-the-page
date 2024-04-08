@@ -2,6 +2,7 @@
 $title = "Add new book";
 require "../template/header.php";
 checkAdmin();
+$conn=db_connect();
 
 if (isset($_POST['add'])) {
     // Get the book data from the form

@@ -2,6 +2,8 @@
 $title = "Vse knjige";
 require_once "./template/header.php";
 
+$conn=db_connect();
+
 // Pridobi možnost sortiranja iz parametra poizvedbe (privzeto na 'najnovejše', če ni podano)
 $sortingOption = isset($_GET['sort']) ? $_GET['sort'] : 'latest';
 

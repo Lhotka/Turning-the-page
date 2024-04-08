@@ -3,6 +3,7 @@ $book_isbn = $_GET['bookisbn'];
 $title = "Book deletion";
 require "../template/header.php";
 checkAdmin();
+$conn=db_connect();
 
 // Delete related rows in book_author first
 $deleteBookAuthorQuery = "DELETE FROM book_author WHERE book_isbn = '$book_isbn'";

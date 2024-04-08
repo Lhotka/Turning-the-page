@@ -19,7 +19,7 @@ when adding to cart, check if user is logged in, if he isnt - redirect
      to login page (and maybe put the item in the cart once he's logged in)
 save carts to accounts
 sortiranje gori doli (kot gump opcija)
-another db_connect for admin
+another db_connect for admin/user
 
 FIX
 order line not fully finished
@@ -34,3 +34,9 @@ MySQL user:
 CREATE USER 'username'@'localhost' IDENTIFIED BY 'Q$UGk8vGjuf#dXtkx8gh';
 
 GRANT ALL PRIVILEGES ON database_name.* TO 'new_user'@'localhost';
+
+
+session start šele ko naredi uspesen login
+dbconnect zgolj tam kjer rabis bazo
+probi vse names dinamicni fiksno
+...

@@ -2,6 +2,8 @@
 $title = "Purchase Process";
 require_once "./template/header.php";
 
+$conn=db_connect();
+
 // Check if the user is logged in
 checkLoggedIn();
 

@@ -2,6 +2,8 @@
 $title = "User Dashboard";
 require_once "./template/header.php";
 
+$conn=db_connect();
+
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['user_email'])) {
     header("Location: login.php");

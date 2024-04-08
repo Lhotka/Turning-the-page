@@ -3,6 +3,8 @@ $title = "Košarica";
 require "./template/header.php";
 require_once "./functions/cart_functions.php";
 
+$conn=db_connect();
+
 // Check if the user is logged in
 checkLoggedIn();
 

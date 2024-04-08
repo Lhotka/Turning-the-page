@@ -2,6 +2,7 @@
 $title = "Book management";
 require_once "../template/header.php";
 checkAdmin();
+$conn=db_connect();
 
 $result = getAllBooks($conn, 'latest');
 ?>

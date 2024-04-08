@@ -2,6 +2,7 @@
 $title = "Publisher Management";
 require_once "../template/header.php";
 checkAdmin();
+$conn=db_connect();
 
 // Handle form submission for adding a new publisher
 if (isset($_POST['add_publisher'])) {

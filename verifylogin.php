@@ -2,6 +2,8 @@
 $title = "Login verify";
 require_once "./template/header.php";
 
+$conn=db_connect();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize and retrieve user input
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
