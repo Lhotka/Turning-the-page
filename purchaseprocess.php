@@ -5,7 +5,6 @@ require_once "./template/header.php";
 // Check if the user is logged in
 checkLoggedIn();
 
-
 print_r($_SESSION);
 foreach ($_POST as $key => $value) {
     if (trim($value) == '') {

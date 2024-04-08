@@ -15,7 +15,7 @@ if (isset($_POST['add'])) {
     $price = floatval(trim($_POST['price']));
 
     // Validate input
-    if (empty($isbn) || empty($title) || empty($authorId) || empty($publisher) || empty($descr) || empty($price) ) {
+    if (empty($isbn) || empty($title) || empty($authorId) || empty($publisher) || empty($descr) || empty($price)) {
         echo "All fields are required";
         exit;
     }
@@ -120,117 +120,117 @@ if (isset($_POST['add'])) {
         $authorId = mysqli_insert_id($conn);
     }
 
-        // Insert the book into the database
-        $query = "INSERT INTO book (book_isbn, book_title, author_id, book_image, book_descr, book_price, publisher_id, date_added) VALUES ('$isbn', '$title', '$authorId', '$image', '$descr', '$price', '$publisherId', NOW())";
-        $result = mysqli_query($conn, $query);
-    
-        if (!$result) {
-            echo "Can't add new data " . mysqli_error($conn);
+    // Insert the book into the database
+    $query = "INSERT INTO book (book_isbn, book_title, author_id, book_image, book_descr, book_price, publisher_id, date_added) VALUES ('$isbn', '$title', '$authorId', '$image', '$descr', '$price', '$publisherId', NOW())";
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        echo "Can't add new data " . mysqli_error($conn);
+        exit;
+    } else {
+        // Fetch the correct book_isbn associated with the inserted ISBN
+        $getBookIsbnQuery = "SELECT book_isbn FROM book WHERE book_isbn = '$isbn'";
+        $getBookIsbnResult = mysqli_query($conn, $getBookIsbnQuery);
+
+        if (!$getBookIsbnResult) {
+            echo "Error getting book ISBN: " . mysqli_error($conn);
             exit;
-        } else {
-            // Fetch the correct book_isbn associated with the inserted ISBN
-            $getBookIsbnQuery = "SELECT book_isbn FROM book WHERE book_isbn = '$isbn'";
-            $getBookIsbnResult = mysqli_query($conn, $getBookIsbnQuery);
-    
-            if (!$getBookIsbnResult) {
-                echo "Error getting book ISBN: " . mysqli_error($conn);
+        }
+
+        $row = mysqli_fetch_assoc($getBookIsbnResult);
+        $bookIsbn = $row['book_isbn'];
+
+        // Check if the entry already exists in book_author
+        $checkBookAuthorQuery = "SELECT * FROM book_author WHERE book_isbn = '$bookIsbn' AND author_id = '$authorId'";
+        $checkBookAuthorResult = mysqli_query($conn, $checkBookAuthorQuery);
+
+        if (mysqli_num_rows($checkBookAuthorResult) == 0) {
+            // Insert into book_author
+            $insertBookAuthorQuery = "INSERT INTO book_author (book_isbn, author_id) VALUES ('$bookIsbn', '$authorId')";
+            $insertBookAuthorResult = mysqli_query($conn, $insertBookAuthorQuery);
+
+            if (!$insertBookAuthorResult) {
+                echo "Error updating book_author table: " . mysqli_error($conn);
                 exit;
             }
-    
-            $row = mysqli_fetch_assoc($getBookIsbnResult);
-            $bookIsbn = $row['book_isbn'];
-    
-            // Check if the entry already exists in book_author
-            $checkBookAuthorQuery = "SELECT * FROM book_author WHERE book_isbn = '$bookIsbn' AND author_id = '$authorId'";
-            $checkBookAuthorResult = mysqli_query($conn, $checkBookAuthorQuery);
-    
-            if (mysqli_num_rows($checkBookAuthorResult) == 0) {
-                // Insert into book_author
-                $insertBookAuthorQuery = "INSERT INTO book_author (book_isbn, author_id) VALUES ('$bookIsbn', '$authorId')";
-                $insertBookAuthorResult = mysqli_query($conn, $insertBookAuthorQuery);
-    
-                if (!$insertBookAuthorResult) {
-                    echo "Error updating book_author table: " . mysqli_error($conn);
-                    exit;
-                }
-            }
-    
-            header("Location: bookadd.php");
         }
+
+        header("Location: bookadd.php");
     }
+}
 ?>
 
-    <form method="post" action="bookadd.php" enctype="multipart/form-data">
-        <table class="table">
-            <tr>
-                <th style="vertical-align: middle;">ISBN</th>
-                <td><input type="text" name="isbn" required></td>
-            </tr>
-            <tr>
-                <th style="vertical-align: middle;">Title</th>
-                <td><input type="text" name="title" required></td>
-            </tr>
-            <tr>
-                <th style="vertical-align: middle;">Author</th>
-                <td>
-                    <select name="author" required>
-                        <option value="new_author" selected>ADD NEW AUTHOR</option>
-                        <?php
-                        // Fetch all authors from the database
-                        $allAuthors = getAllAuthors($conn);
+<form method="post" action="bookadd.php" enctype="multipart/form-data">
+    <table class="table">
+        <tr>
+            <th style="vertical-align: middle;">ISBN</th>
+            <td><input type="text" name="isbn" required></td>
+        </tr>
+        <tr>
+            <th style="vertical-align: middle;">Title</th>
+            <td><input type="text" name="title" required></td>
+        </tr>
+        <tr>
+            <th style="vertical-align: middle;">Author</th>
+            <td>
+                <select name="author" required>
+                    <option value="new_author" selected>ADD NEW AUTHOR</option>
+                    <?php
+                    // Fetch all authors from the database
+                    $allAuthors = getAllAuthors($conn);
 
-                        // Loop through authors and populate the dropdown
-                        foreach ($allAuthors as $author) {
-                            $authorId = $author['author_id'];
-                            $authorName = $author['author_name'];
-                            echo "<option value='$authorId'>$authorName</option>";
-                        }
-                        ?>
-                    </select>
-                    <input type="text" name="new_author" placeholder="Enter author name">
-                </td>
-            </tr>
-            <tr>
-                <th style="vertical-align: middle;">Publisher</th>
-                <td>
-                    <select name="publisher" required>
-                        <option value="new_publisher" selected>ADD NEW PUBLISHER</option>
-                        <?php
-                        // Fetch all publishers from the database
-                        $allPublishers = getAllPublishers($conn);
+                    // Loop through authors and populate the dropdown
+                    foreach ($allAuthors as $author) {
+                        $authorId = $author['author_id'];
+                        $authorName = $author['author_name'];
+                        echo "<option value='$authorId'>$authorName</option>";
+                    }
+                    ?>
+                </select>
+                <input type="text" name="new_author" placeholder="Enter author name">
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align: middle;">Publisher</th>
+            <td>
+                <select name="publisher" required>
+                    <option value="new_publisher" selected>ADD NEW PUBLISHER</option>
+                    <?php
+                    // Fetch all publishers from the database
+                    $allPublishers = getAllPublishers($conn);
 
-                        // Loop through publishers and populate the dropdown
-                        foreach ($allPublishers as $publisher) {
-                            $publisherName = $publisher['publisher_name'];
-                            echo "<option value='$publisherName'>$publisherName</option>";
-                        }
-                        ?>
-                    </select>
-                    <input type="text" name="new_publisher" placeholder="Enter publisher name">
-                </td>
-            </tr>
-            <tr>
-                <th style="vertical-align: middle;">Image</th>
-                <td><input type="file" name="image" accept="image/*"></td>
-            </tr>
-            <tr>
-                <th style="vertical-align: middle;">Description</th>
-                <td><textarea id="descriptionTextarea" name="descr" cols="60" rows="5"></textarea></td>
-            </tr>
-            <tr>
-                <th style="vertical-align: middle;">Price</th>
-                <td><input type="text" name="price" required></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" name="add" value="Add book" class="btn btn-success">
-                    <input type="reset" value="Reset" class="btn btn-danger">
-                    <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
-                </td>
-            </tr>
-        </table>
-    </form>
-    
+                    // Loop through publishers and populate the dropdown
+                    foreach ($allPublishers as $publisher) {
+                        $publisherName = $publisher['publisher_name'];
+                        echo "<option value='$publisherName'>$publisherName</option>";
+                    }
+                    ?>
+                </select>
+                <input type="text" name="new_publisher" placeholder="Enter publisher name">
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align: middle;">Image</th>
+            <td><input type="file" name="image" accept="image/*"></td>
+        </tr>
+        <tr>
+            <th style="vertical-align: middle;">Description</th>
+            <td><textarea id="descriptionTextarea" name="descr" cols="60" rows="5"></textarea></td>
+        </tr>
+        <tr>
+            <th style="vertical-align: middle;">Price</th>
+            <td><input type="text" name="price" required></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="add" value="Add book" class="btn btn-success">
+                <input type="reset" value="Reset" class="btn btn-danger">
+                <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
 <script>
     // Function to go back to the previous page
     function goBack() {
@@ -282,5 +282,5 @@ if (isset($_POST['add'])) {
     window.addEventListener('load', autoResizeInputs);
 </script>
 <?php
-	require_once "../template/footer.php";
+require_once "../template/footer.php";
 ?>

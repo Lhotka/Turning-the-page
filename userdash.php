@@ -31,7 +31,7 @@ if ($userID) {
     $username = $userData['username'];
     $email = $userData['email'];
 
-    ?>
+?>
 
     <div class="container">
         <h2>Welcome <?php echo $username; ?>!</h2>
@@ -40,17 +40,17 @@ if ($userID) {
         <a href="userorders.php" class="btn btn-info" style="display: inline-block; margin-right: 10px;">Orders</a>
         <!-- Add logic -->
 
-        
+
         <!-- Add more sections-->
 
-        
+
         <!-- Sign-out button -->
-    <form method="post" action="userdash.php">
-        <input type="submit" name="logout" class="btn btn-danger" value="Sign Out">
-    </form>
+        <form method="post" action="userdash.php">
+            <input type="submit" name="logout" class="btn btn-danger" value="Sign Out">
+        </form>
     </div>
 
-    <?php
+<?php
 } else {
     // User not found, redirect to login page or display an error message
     header("Location: login.php");

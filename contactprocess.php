@@ -20,13 +20,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
         header("Location: " . $_SERVER['HTTP_REFERER'] . "?error=empty_fields");
         exit();
     }
-    
+
     $dotenvFilePath = 'C:\xampp\htdocs\FINAL\.env';
 
     if (!file_exists($dotenvFilePath) || !is_readable($dotenvFilePath)) {
         die('Error: Unable to read the .env file.');
     }
-    
+
     $dotenvFilePath = 'C:\xampp\htdocs\FINAL'; // Point directly to the directory, not the file
 
     try {
@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = $_ENV['GMAIL_USERNAME'];
-        $mail->Password   = trim($_ENV['GMAIL_PASSWORD']);        
+        $mail->Password   = trim($_ENV['GMAIL_PASSWORD']);
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
@@ -69,14 +69,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
         $errorLog = fopen('error_log.txt', 'a');
         fwrite($errorLog, date('Y-m-d H:i:s') . ' Error: ' . $e->getMessage() . PHP_EOL);
         fclose($errorLog);
-    
+
         // Set error message
         $_SESSION['error_message'] = 'Failed to send email';
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     }
-    
-    
 } else {
     // If the form is not submitted via POST or keys are not set, redirect to the contact page
     header("Location: contact.php");

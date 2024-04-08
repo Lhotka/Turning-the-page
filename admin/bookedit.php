@@ -40,7 +40,7 @@ if (isset($_POST['save_change'])) {
     if (empty($title) || ($authorId === 'new_author' && empty($newAuthorName)) || empty($publisher) || empty($descr) || empty($price)) {
         echo "All fields are required";
         exit;
-    }   
+    }
     // Publisher handling
     $checkPublisherQuery = "SELECT * FROM publisher WHERE publisher_name = '$publisher'";
     $checkPublisherResult = mysqli_query($conn, $checkPublisherQuery);
@@ -59,7 +59,6 @@ if (isset($_POST['save_change'])) {
 
         // Get the newly inserted publisher ID
         $publisherId = mysqli_insert_id($conn);
-
     } else {
         // Get the publisher ID if it already exists
         $row = mysqli_fetch_assoc($checkPublisherResult);
@@ -96,27 +95,26 @@ if (isset($_POST['save_change'])) {
         // Update the book_author table
         $insertBookAuthorQuery = "INSERT INTO book_author (book_isbn, author_id) VALUES ('$isbn', '$authorId')";
         $insertBookAuthorResult = mysqli_query($conn, $insertBookAuthorQuery);
-    
+
         if (!$insertBookAuthorResult) {
             echo "Error updating book_author table: " . mysqli_error($conn);
             exit;
         }
-
     } elseif (!empty($authorId)) {
         // Existing author selected
         // Update the author_id in the book table directly
         $query = "UPDATE book SET author_id = '$authorId' WHERE book_isbn = '$isbn'";
         $result = mysqli_query($conn, $query);
-        
+
         if (!$result) {
             echo "Error updating book author: " . mysqli_error($conn);
             exit;
         }
-    
+
         // Update the book_author table
         $updateBookAuthorQuery = "UPDATE book_author SET author_id = '$authorId' WHERE book_isbn = '$isbn'";
         $updateBookAuthorResult = mysqli_query($conn, $updateBookAuthorQuery);
-    
+
         if (!$updateBookAuthorResult) {
             echo "Error updating book_author table: " . mysqli_error($conn);
             exit;
@@ -221,21 +219,21 @@ if (isset($_POST['save_change'])) {
                 <select name="author" required>
                     <option value="new_author" selected>ADD NEW AUTHOR</option>
                     <?php
-                        // Fetch all authors from the database
-                        $allAuthors = getAllAuthors($conn);
-                        $originalAuthorId = $row['author_id'];
-                        // Loop through authors and populate the dropdown
-                        foreach ($allAuthors as $author) {
-                            $authorId = $author['author_id'];
-                            $authorName = $author['author_name'];
+                    // Fetch all authors from the database
+                    $allAuthors = getAllAuthors($conn);
+                    $originalAuthorId = $row['author_id'];
+                    // Loop through authors and populate the dropdown
+                    foreach ($allAuthors as $author) {
+                        $authorId = $author['author_id'];
+                        $authorName = $author['author_name'];
 
-                            // Check if the current author matches the original author
-                            if ($authorId == $originalAuthorId) {
-                                echo "<option value='$authorId' selected>$authorName</option>";
-                            } else {
-                                echo "<option value='$authorId'>$authorName</option>";
-                            }
+                        // Check if the current author matches the original author
+                        if ($authorId == $originalAuthorId) {
+                            echo "<option value='$authorId' selected>$authorName</option>";
+                        } else {
+                            echo "<option value='$authorId'>$authorName</option>";
                         }
+                    }
                     ?>
                 </select>
                 <input type="text" name="new_author" placeholder="Enter author name">

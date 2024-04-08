@@ -1,12 +1,12 @@
 <!-- useradd.php -->
 <?php
-    $title = "Add New User";
-    require_once "../template/header.php";
-    checkAdmin();
+$title = "Add New User";
+require_once "../template/header.php";
+checkAdmin();
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // User addition code here...
-    }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // User addition code here...
+}
 ?>
 
 <div class="container">
@@ -29,5 +29,5 @@
 </div>
 
 <?php
-    require_once "../template/footer.php";
+require_once "../template/footer.php";
 ?>

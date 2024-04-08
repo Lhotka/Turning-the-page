@@ -1,28 +1,28 @@
 <?php
-    $title = "Login";
-    require_once "./template/header.php";
+$title = "Login";
+require_once "./template/header.php";
 
-    // Check for error message from redirection
-    if (isset($_SESSION['redirect_message']) && $_SESSION['redirect_message'] === 'cart') {
-        // Display the message
-        echo '<div class="alert alert-danger" role="alert">You must be logged in to use the cart.</div>';
-        // Clear the message to prevent displaying it again
-        unset($_SESSION['redirect_message']);
-    }
+// Check for error message from redirection
+if (isset($_SESSION['redirect_message']) && $_SESSION['redirect_message'] === 'cart') {
+    // Display the message
+    echo '<div class="alert alert-danger" role="alert">You must be logged in to use the cart.</div>';
+    // Clear the message to prevent displaying it again
+    unset($_SESSION['redirect_message']);
+}
 
-    // Check if the admin is already logged in
-    if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
-        // Redirect to the admin dashboard
-        header("Location: admin/admindash.php");
-        exit();
-    }
+// Check if the admin is already logged in
+if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
+    // Redirect to the admin dashboard
+    header("Location: admin/admindash.php");
+    exit();
+}
 
-    // Check if the user is already logged in
-    if (isset($_SESSION['user_id'])) {
-        // Redirect to the user dashboard
-        header("Location: userdash.php");
-        exit();
-    }
+// Check if the user is already logged in
+if (isset($_SESSION['user_id'])) {
+    // Redirect to the user dashboard
+    header("Location: userdash.php");
+    exit();
+}
 ?>
 
 <div class="container">
@@ -76,5 +76,5 @@
 </div>
 
 <?php
-    require_once "./template/footer.php";
+require_once "./template/footer.php";
 ?>

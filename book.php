@@ -4,6 +4,7 @@ $book_isbn = $_GET['bookisbn'];
 
 $conn = db_connect();
 
+// Fetch book details
 $query = "SELECT b.*, GROUP_CONCAT(a.author_name SEPARATOR ', ') AS avtorji
           FROM book b
           LEFT JOIN book_author ba ON b.book_isbn = ba.book_isbn
@@ -59,13 +60,13 @@ require_once "./template/header.php";
             </tr>
             <tr>
                 <td>Cena</td>
-                <td><?php echo $row['book_price']."€"; ?></td>
+                <td><?php echo $row['book_price'] . " €"; ?></td>
             </tr>
 
             <tr>
                 <td>Na voljo</td>
                 <td>
-                    <?php 
+                    <?php
                     $stock = $row['book_quantity'];
                     if ($stock > 0) {
                         echo "Na zalogi";
@@ -79,23 +80,24 @@ require_once "./template/header.php";
         <?php
 
         // Check if the user is logged in
-        if (isLoggedIn()==true) {
+        if (isLoggedIn() == true) {
             // If logged in, call the addToCart function
-            ?>
+        ?>
             <form method="post" action="cart.php">
                 <input type="hidden" name="bookisbn" value="<?php echo $book_isbn; ?>">
                 <input type="submit" value="Dodaj v košarico" name="cart" class="btn btn-primary">
             </form>
-            <?php ;}
-        else {
-            ?>
+        <?php ;
+        } else {
+        ?>
 
-                <div class="alert alert-danger" role="alert" style="display: inline-block; margin-right: 10px;">Morate biti prijavljeni, da uporabljate košarico</div>
+            <div class="alert alert-danger" role="alert" style="display: inline-block; margin-right: 10px;">Morate biti prijavljeni, da uporabljate košarico</div>
 
-            <?php ;} ?>
+        <?php ;
+        } ?>
     </div>
 </div>
-<br/>
+<br />
 <div class="row ">
     <h4>Opis knjige</h4>
     <p class="justified-text"><?php echo $row['book_descr']; ?></p>

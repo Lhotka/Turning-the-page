@@ -1,8 +1,8 @@
 <?php
-    $title = "Admin Dashboard";
-    require_once "../template/header.php";
-    checkAdmin();
-    $result = getAll($conn);
+$title = "Admin Dashboard";
+require_once "../template/header.php";
+checkAdmin();
+$result = getAll($conn);
 ?>
 
 <div class="lead">
@@ -13,5 +13,5 @@
 </div>
 
 <?php
-    require_once "../template/footer.php";
+require_once "../template/footer.php";
 ?>

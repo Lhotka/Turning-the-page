@@ -1,9 +1,9 @@
 <?php
-function isAdmin ()
+function isAdmin()
 {
-    if(isset($_SESSION['admin']) && $_SESSION['admin'] === true){
+    if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
         return true;
-    } 
+    }
     return false;
 }
 function checkAdmin()

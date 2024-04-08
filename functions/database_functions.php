@@ -8,6 +8,8 @@ function db_connect()
     return $conn;
 }
 
+
+
 function checkAndResizeImage($sourcePath, $targetWidth)
 // Check and resize image if needed, also check that it's less than 5MB
 {
@@ -85,7 +87,8 @@ function getUser($conn, $email, $password)
     return null;
 }
 
-function getUserData($conn, $userid) {
+function getUserData($conn, $userid)
+{
     $query = "SELECT username, email, user_type FROM user WHERE id = $userid";
 
     $result = mysqli_query($conn, $query);
@@ -146,7 +149,6 @@ function updateUser($conn, $userid, $username, $userType)
     }
 }
 
-
 function deleteUser($conn, $userid)
 {
     $query = "DELETE FROM user WHERE id = $userid";
@@ -158,9 +160,8 @@ function deleteUser($conn, $userid)
     }
 }
 
-function setUserId($name, $address, $city, $zip_code, $country)
+function setUserId($conn, $name, $address, $city, $zip_code, $country)
 {
-    $conn = db_connect();
     $query = "INSERT INTO user (name, address, city, zip_code, country) VALUES 
         ('$name', '$address', '$city', '$zip_code', '$country')";
 
@@ -174,53 +175,53 @@ function setUserId($name, $address, $city, $zip_code, $country)
     return $id;
 }
 
-	function selectLatestBooks($conn)
-    {
-		$row = array();
-        $query = "SELECT book_isbn, book_image FROM book ORDER BY date_added DESC LIMIT 4";
-		$result = mysqli_query($conn, $query);
-		if(!$result){
-		    echo "Can't retrieve data " . mysqli_error($conn);
-		    exit;
-		}
-		for($i = 0; $i < 4; $i++){
-			array_push($row, mysqli_fetch_assoc($result));
-		}
-		return $row;
-	}
+function selectLatestBooks($conn)
+{
+    $row = array();
+    $query = "SELECT book_isbn, book_image FROM book ORDER BY date_added DESC LIMIT 4";
+    $result = mysqli_query($conn, $query);
+    if (!$result) {
+        echo "Can't retrieve data " . mysqli_error($conn);
+        exit;
+    }
+    for ($i = 0; $i < 4; $i++) {
+        array_push($row, mysqli_fetch_assoc($result));
+    }
+    return $row;
+}
 
-    function getAuthorsByISBN($conn, $isbn)
-    {
-        $query = "SELECT a.author_name FROM book_author ba
+function getAuthorsByISBN($conn, $isbn)
+{
+    $query = "SELECT a.author_name FROM book_author ba
                   JOIN author a ON ba.author_id = a.author_id
                   WHERE ba.book_isbn = '$isbn'";
-    
-        $result = mysqli_query($conn, $query);
-    
-        if (!$result) {
-            echo "Can't retrieve data " . mysqli_error($conn);
-            exit;
-        }
-    
-        $authors = array();
-        while ($row = mysqli_fetch_assoc($result)) {
-            $authors[] = $row['author_name'];
-        }
-    
-        return $authors;
+
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        echo "Can't retrieve data " . mysqli_error($conn);
+        exit;
     }
 
-	function getOrderId($conn, $id)
-    {
-        $query = "SELECT orderid FROM orders WHERE customerid = '$id'";
-		$result = mysqli_query($conn, $query);
-		if(!$result){
-			echo "retrieve data failed!" . mysqli_error($conn);
-			exit;
-		}
-		$row = mysqli_fetch_assoc($result);
-		return $row['orderid'];
-	}
+    $authors = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $authors[] = $row['author_name'];
+    }
+
+    return $authors;
+}
+
+function getOrderId($conn, $id)
+{
+    $query = "SELECT orderid FROM orders WHERE customerid = '$id'";
+    $result = mysqli_query($conn, $query);
+    if (!$result) {
+        echo "retrieve data failed!" . mysqli_error($conn);
+        exit;
+    }
+    $row = mysqli_fetch_assoc($result);
+    return $row['orderid'];
+}
 /*
     function insertIntoOrder($conn, $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country)
     {
@@ -243,42 +244,42 @@ function setUserId($name, $address, $city, $zip_code, $country)
     }
     */
 
-    //insertIntoOrder with debugging and trimming
-    function insertIntoOrder($conn, $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country)
-    {
-        // Trim input data to remove leading and trailing spaces
-        $ship_name = trim($ship_name);
-        $ship_address = trim($ship_address);
-        $ship_city = trim($ship_city);
-        $ship_zip_code = trim($ship_zip_code);
-        $ship_country = trim($ship_country);
-    
-        // Modify the query to include the correct column names and placeholders for values
-        $query = "INSERT INTO orders (customerid, amount, date, ship_name, ship_address, ship_city, ship_zip_code, ship_country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        echo "Query: $query<br>"; // Debugging
-    
-        // Prepare the query
-        $stmt = mysqli_prepare($conn, $query);
-    
-        var_dump($stmt); // Debugging
-        
-        // Bind parameters to the prepared statement
-        mysqli_stmt_bind_param($stmt, "idssssss", $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country);
-    
-        // Execute the statement
-        $result = mysqli_stmt_execute($stmt);
-    
-        var_dump($result); // Debugging
-    
-        if (!$result) {
-            echo "Insert orders failed: " . mysqli_error($conn);
-            exit;
-        } else {
-            echo "Insert orders succeeded<br>"; // Debugging
-        }
+//insertIntoOrder with debugging and trimming
+function insertIntoOrder($conn, $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country)
+{
+    // Trim input data to remove leading and trailing spaces
+    $ship_name = trim($ship_name);
+    $ship_address = trim($ship_address);
+    $ship_city = trim($ship_city);
+    $ship_zip_code = trim($ship_zip_code);
+    $ship_country = trim($ship_country);
+
+    // Modify the query to include the correct column names and placeholders for values
+    $query = "INSERT INTO orders (customerid, amount, date, ship_name, ship_address, ship_city, ship_zip_code, ship_country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    echo "Query: $query<br>"; // Debugging
+
+    // Prepare the query
+    $stmt = mysqli_prepare($conn, $query);
+
+    var_dump($stmt); // Debugging
+
+    // Bind parameters to the prepared statement
+    mysqli_stmt_bind_param($stmt, "idssssss", $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country);
+
+    // Execute the statement
+    $result = mysqli_stmt_execute($stmt);
+
+    var_dump($result); // Debugging
+
+    if (!$result) {
+        echo "Insert orders failed: " . mysqli_error($conn);
+        exit;
+    } else {
+        echo "Insert orders succeeded<br>"; // Debugging
     }
-    
+}
+
 
 function getbookprice($conn, $isbn)
 {
@@ -295,24 +296,24 @@ function getbookprice($conn, $isbn)
     return $row['book_price'];
 }
 
-	function getPubName($conn, $pubid)
-    {
-		$query = "SELECT publisher_name FROM publisher WHERE publisher_id = '$pubid'";
-		$result = mysqli_query($conn, $query);
-		if(!$result){
-			echo "Can't retrieve data " . mysqli_error($conn);
-			exit;
-		}
-		if(mysqli_num_rows($result) == 0){
-			echo "Something is wrong!";
-			exit;
-		}
+function getPubName($conn, $pubid)
+{
+    $query = "SELECT publisher_name FROM publisher WHERE publisher_id = '$pubid'";
+    $result = mysqli_query($conn, $query);
+    if (!$result) {
+        echo "Can't retrieve data " . mysqli_error($conn);
+        exit;
+    }
+    if (mysqli_num_rows($result) == 0) {
+        echo "Something is wrong!";
+        exit;
+    }
 
-		$row = mysqli_fetch_assoc($result);
-		return $row['publisher_name'];
-	}
+    $row = mysqli_fetch_assoc($result);
+    return $row['publisher_name'];
+}
 
-    function getAllPublishers($conn)
+function getAllPublishers($conn)
 {
     $query = "SELECT * FROM publisher";
     $result = mysqli_query($conn, $query);
@@ -483,7 +484,8 @@ function getAllAuthorsWithBookCount($conn)
     return $authors;
 }
 
-function countWords($text) {
+function countWords($text)
+{
     // Remove HTML tags and trim whitespaces
     $cleanText = trim(strip_tags($text));
 
@@ -493,7 +495,8 @@ function countWords($text) {
     return $wordCount;
 }
 
-function checkLoggedIn() {
+function checkLoggedIn()
+{
 
     // Check if the user is logged in
     if (!isset($_SESSION['user_id'])) {
@@ -504,7 +507,8 @@ function checkLoggedIn() {
         exit;
     }
 }
-function isLoggedIn() {
+function isLoggedIn()
+{
 
     // Check if the user is logged in. If he is = true
     if (isset($_SESSION['user_id'])) {

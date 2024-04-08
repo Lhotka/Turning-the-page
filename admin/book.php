@@ -1,11 +1,11 @@
 <?php
-    $title = "Book management";
-    require_once "../template/header.php";
-    checkAdmin();
+$title = "Book management";
+require_once "../template/header.php";
+checkAdmin();
 
-    $result = getAllBooks($conn, 'latest');
+$result = getAllBooks($conn, 'latest');
 ?>
-    <h2>Book Management</h2>
+<h2>Book Management</h2>
 
 <p class="lead"><a href="bookadd.php">Add new book</a></p>
 <table class="table" style="margin-top: 20px">
@@ -32,7 +32,7 @@
             <td><?php echo getPubName($conn, $row['publisher_id']); ?></td>
             <td><?php echo $row['book_image']; ?></td>
             <td><?php echo empty($row['book_descr']) ? 'EMPTY' : countWords($row['book_descr']) . " words"; ?></td>
-            <td><?php echo $row['book_price']."€"; ?></td>
+            <td><?php echo $row['book_price'] . "€"; ?></td>
             <td><?php echo $row['book_quantity']; ?></td>
             <td><a href="bookedit.php?bookisbn=<?php echo $row['book_isbn']; ?>">Edit</a></td>
             <td><a style="color:red" href="bookdelete.php?bookisbn=<?php echo $row['book_isbn']; ?>">Delete</a></td>
@@ -41,5 +41,5 @@
 </table>
 
 <?php
-    require_once "../template/footer.php";
+require_once "../template/footer.php";
 ?>

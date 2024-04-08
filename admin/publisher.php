@@ -1,40 +1,40 @@
 <?php
-    $title = "Publisher Management";
-    require_once "../template/header.php";
-    checkAdmin();
+$title = "Publisher Management";
+require_once "../template/header.php";
+checkAdmin();
 
-    // Handle form submission for adding a new publisher
-    if(isset($_POST['add_publisher'])) {
-        $newPublisherName = trim($_POST['new_publisher_name']);
-        // Perform any additional validation if needed
+// Handle form submission for adding a new publisher
+if (isset($_POST['add_publisher'])) {
+    $newPublisherName = trim($_POST['new_publisher_name']);
+    // Perform any additional validation if needed
 
-        // Insert the new publisher into the database
-        $query = "INSERT INTO publisher (publisher_name) VALUES ('$newPublisherName')";
-        $insertResult = mysqli_query($conn, $query);
+    // Insert the new publisher into the database
+    $query = "INSERT INTO publisher (publisher_name) VALUES ('$newPublisherName')";
+    $insertResult = mysqli_query($conn, $query);
 
-        if(!$insertResult) {
-            echo "Error adding new publisher: " . mysqli_error($conn);
-        } else {
-            echo "New publisher added successfully!";
-        }
+    if (!$insertResult) {
+        echo "Error adding new publisher: " . mysqli_error($conn);
+    } else {
+        echo "New publisher added successfully!";
     }
+}
 
-    // Handle form submission for deleting a publisher
-    if(isset($_POST['delete_publisher'])) {
-        $deletePublisherID = $_POST['delete_publisher_id'];
-        
-        // Delete the selected publisher from the database
-        $deleteQuery = "DELETE FROM publisher WHERE publisher_id = '$deletePublisherID'";
-        $deleteResult = mysqli_query($conn, $deleteQuery);
+// Handle form submission for deleting a publisher
+if (isset($_POST['delete_publisher'])) {
+    $deletePublisherID = $_POST['delete_publisher_id'];
 
-        if(!$deleteResult) {
-            echo "Error deleting publisher: " . mysqli_error($conn);
-        }
+    // Delete the selected publisher from the database
+    $deleteQuery = "DELETE FROM publisher WHERE publisher_id = '$deletePublisherID'";
+    $deleteResult = mysqli_query($conn, $deleteQuery);
+
+    if (!$deleteResult) {
+        echo "Error deleting publisher: " . mysqli_error($conn);
     }
+}
 
-    $result = getAllPublishers($conn);
+$result = getAllPublishers($conn);
 ?>
-    <h2>Publisher Management</h2>
+<h2>Publisher Management</h2>
 
 <!-- <button type="button" onclick="window.location.href='admindash.php';" class="btn btn-default">Go to Dashboard</button> -->
 
@@ -72,5 +72,5 @@
 </table>
 
 <?php
-    require_once "../template/footer.php";
+require_once "../template/footer.php";
 ?>

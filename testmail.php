@@ -6,11 +6,11 @@ use PHPMailer\PHPMailer\Exception;
 
 $dotenvFilePath = 'C:\xampp\htdocs\FINAL\.env';
 
-    if (!file_exists($dotenvFilePath) || !is_readable($dotenvFilePath)) {
-        die('Error: Unable to read the .env file.');
-    }
-    
-    $dotenvFilePath = 'C:\xampp\htdocs\FINAL'; // Point directly to the directory, not the file
+if (!file_exists($dotenvFilePath) || !is_readable($dotenvFilePath)) {
+    die('Error: Unable to read the .env file.');
+}
+
+$dotenvFilePath = 'C:\xampp\htdocs\FINAL'; // Point directly to the directory, not the file
 
 try {
     $dotenv = Dotenv\Dotenv::createImmutable($dotenvFilePath);
@@ -28,8 +28,8 @@ try {
     $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
-        $mail->Username   = $_ENV['GMAIL_USERNAME'];
-        $mail->Password   = trim($_ENV['GMAIL_PASSWORD']);  
+    $mail->Username   = $_ENV['GMAIL_USERNAME'];
+    $mail->Password   = trim($_ENV['GMAIL_PASSWORD']);
     $mail->SMTPSecure = 'tls';
     $mail->Port       = 587;
 
@@ -44,9 +44,8 @@ try {
 
     // Send email
     $mail->send();
-    
+
     echo 'Email sent successfully!';
 } catch (Exception $e) {
     echo 'Error: ' . $mail->ErrorInfo;
 }
-?>

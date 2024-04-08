@@ -31,6 +31,8 @@
 	if(isset($_SESSION['cart']) && (array_count_values($_SESSION['cart']))){
         require_once 'template/cartnoedit.php';
 ?>
+    <script src="https://kit.fontawesome.com/14c1c695aa.js" crossorigin="anonymous"></script>
+
     <form method="post" action="purchaseprocess.php" class="form-horizontal">
         <?php if(isset($_SESSION['err']) && $_SESSION['err'] == 1){ ?>
             <p class="text-danger">Vsa polja morajo biti izpolnjena</p>

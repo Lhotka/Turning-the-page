@@ -17,6 +17,9 @@ Multiple authors for one book
 način plačila v tabelo orders
 when adding to cart, check if user is logged in, if he isnt - redirect
      to login page (and maybe put the item in the cart once he's logged in)
+save carts to accounts
+sortiranje gori doli (kot gump opcija)
+another db_connect for admin
 
 FIX
 order line not fully finished

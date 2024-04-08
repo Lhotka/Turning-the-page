@@ -1,16 +1,17 @@
 <?php
-    $title = "Vse knjige";
-    require_once "./template/header.php";
+$title = "Vse knjige";
+require_once "./template/header.php";
 
-    // Pridobi možnost sortiranja iz parametra poizvedbe (privzeto na 'najnovejše', če ni podano)
-    $sortingOption = isset($_GET['sort']) ? $_GET['sort'] : 'latest';
+// Pridobi možnost sortiranja iz parametra poizvedbe (privzeto na 'najnovejše', če ni podano)
+$sortingOption = isset($_GET['sort']) ? $_GET['sort'] : 'latest';
 
-    // Pridobi vse knjige glede na možnost sortiranja
-    $result = getAllBooks($conn, $sortingOption);
+// Pridobi vse knjige glede na možnost sortiranja
+$result = getAllBooks($conn, $sortingOption);
 ?>
 
 <!DOCTYPE html>
 <html lang="sl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +34,7 @@
             <option value="rating" <?php echo ($sortingOption === 'rating') ? 'selected' : ''; ?>>Ocena</option>
         </select>
     </form>
-    
+
     <?php
     $count = 0;
 
@@ -43,20 +44,20 @@
         if ($count % 4 == 0) {
             echo '<div class="row">';
         }
-        ?>
+    ?>
         <div class="col-md-3 text-center">
             <a href="book.php?bookisbn=<?php echo $query_row['book_isbn']; ?>">
                 <img class="img-responsive img-thumbnail" src="./bootstrap/img/<?php echo $query_row['book_image']; ?>">
-            <p><strong><?php echo $query_row['book_title']; ?></strong></p>
-            <?php 
+                <p><strong><?php echo $query_row['book_title']; ?></strong></p>
+                <?php
                 foreach ($avtorji as $avtor) {
                     echo '<a href="author.php?name=' . urlencode($avtor) . '">' . $avtor . '</a>';
                     if (next($avtorji)) {
                         echo ', ';
                     }
-                }?>
+                } ?>
         </div>
-        <?php
+    <?php
         $count++;
         if ($count % 4 == 0) {
             echo '</div><br>';
@@ -69,4 +70,4 @@
     }
 
     require_once "./template/footer.php";
-?>
+    ?>

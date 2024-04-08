@@ -1,12 +1,12 @@
 <?php
-	$title = "Blagajna";
-	require "./template/header.php";
-    
-    // Check if the user is logged in
-    checkLoggedIn();
+$title = "Blagajna";
+require "./template/header.php";
 
-	// košarica potrebuje seje, da se začne ena
-	/*
+// Check if the user is logged in
+checkLoggedIn();
+
+// košarica potrebuje seje, da se začne ena
+/*
 		Seznam sej(
 			košarica => array (
 				book_isbn (pridobi iz $_GET['book_isbn']) => število knjig
@@ -16,18 +16,18 @@
 		)
 	*/
 
-	if(isset($_SESSION['cart']) && (array_count_values($_SESSION['cart']))){
+if (isset($_SESSION['cart']) && (array_count_values($_SESSION['cart']))) {
 
     require_once 'template/cartnoedit.php';
-    ?>
-	<!-- Obrazec za uporabnikove podrobnosti in gumb za nakup -->
+?>
+    <!-- Obrazec za uporabnikove podrobnosti in gumb za nakup -->
     <!-- Forma za zbiranje podrobnosti uporabnika -->
     <form method="post" action="purchase.php" class="form-horizontal">
         <!-- Sporočilo o napaki za nepopolna polja -->
-        <?php if(isset($_SESSION['err']) && $_SESSION['err'] == 1){ ?>
+        <?php if (isset($_SESSION['err']) && $_SESSION['err'] == 1) { ?>
             <p class="text-danger">Vsa polja morajo biti izpolnjena</p>
         <?php } ?>
-        
+
         <!-- Polja za podrobnosti uporabnika -->
         <div class="form-group">
             <label for="ship_name" class="control-label col-md-4">Ime</label>
@@ -72,8 +72,8 @@
 
 
 <?php
-	} else {
-		echo "<p class=\"text-warning\">Vaša košarica je prazna!</p>";
-	}
-	require_once "./template/footer.php";
+} else {
+    echo "<p class=\"text-warning\">Vaša košarica je prazna!</p>";
+}
+require_once "./template/footer.php";
 ?>

@@ -1,49 +1,49 @@
 <?php
-    $title = "Author Management";
-    require_once "../template/header.php";
-    checkAdmin();
+$title = "Author Management";
+require_once "../template/header.php";
+checkAdmin();
 
-    // Handle form submission for adding a new author
-    if(isset($_POST['add_author'])) {
-        $newAuthorName = trim($_POST['new_author_name']);
-        // Perform any additional validation if needed
+// Handle form submission for adding a new author
+if (isset($_POST['add_author'])) {
+    $newAuthorName = trim($_POST['new_author_name']);
+    // Perform any additional validation if needed
 
-        // Insert the new author into the database
-        $query = "INSERT INTO author (author_name) VALUES ('$newAuthorName')";
-        $insertResult = mysqli_query($conn, $query);
+    // Insert the new author into the database
+    $query = "INSERT INTO author (author_name) VALUES ('$newAuthorName')";
+    $insertResult = mysqli_query($conn, $query);
 
-        if(!$insertResult) {
-            echo "Error adding new author: " . mysqli_error($conn);
-        } else {
-            echo "New author added successfully!";
+    if (!$insertResult) {
+        echo "Error adding new author: " . mysqli_error($conn);
+    } else {
+        echo "New author added successfully!";
+    }
+}
+
+// Handle form submission for deleting an author
+if (isset($_POST['delete_author'])) {
+    $deleteAuthorID = $_POST['delete_author_id'];
+
+    // Check if the author has associated books
+    $checkQuery = "SELECT COUNT(*) AS book_count FROM book_author WHERE author_id = '$deleteAuthorID'";
+    $checkResult = mysqli_query($conn, $checkQuery);
+    $bookCount = mysqli_fetch_assoc($checkResult)['book_count'];
+
+    if ($bookCount > 0) {
+        echo "Error: This author cannot be deleted because they are linked to $bookCount book(s).";
+    } else {
+        // Delete the selected author from the database
+        $deleteQuery = "DELETE FROM author WHERE author_id = '$deleteAuthorID'";
+        $deleteResult = mysqli_query($conn, $deleteQuery);
+
+        if (!$deleteResult) {
+            echo "Error deleting author: " . mysqli_error($conn);
         }
     }
-    
-    // Handle form submission for deleting an author
-    if(isset($_POST['delete_author'])) {
-        $deleteAuthorID = $_POST['delete_author_id'];
-        
-        // Check if the author has associated books
-        $checkQuery = "SELECT COUNT(*) AS book_count FROM book_author WHERE author_id = '$deleteAuthorID'";
-        $checkResult = mysqli_query($conn, $checkQuery);
-        $bookCount = mysqli_fetch_assoc($checkResult)['book_count'];
-
-        if($bookCount > 0) {
-            echo "Error: This author cannot be deleted because they are linked to $bookCount book(s).";
-        } else {
-            // Delete the selected author from the database
-            $deleteQuery = "DELETE FROM author WHERE author_id = '$deleteAuthorID'";
-            $deleteResult = mysqli_query($conn, $deleteQuery);
-
-            if(!$deleteResult) {
-                echo "Error deleting author: " . mysqli_error($conn);
-            }
-        }
-    }
+}
 
 
-    // Fetch all authors with associated book count from the database
-    $authors = getAllAuthorsWithBookCount($conn);
+// Fetch all authors with associated book count from the database
+$authors = getAllAuthorsWithBookCount($conn);
 ?>
 
 <h2>Author Management</h2>
