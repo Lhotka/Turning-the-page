@@ -212,7 +212,7 @@ function setUserId($name, $address, $city, $zip_code, $country)
 
 	function getOrderId($conn, $id)
     {
-		$query = "SELECT orderid FROM orders WHERE id = '$id'";
+        $query = "SELECT orderid FROM orders WHERE customerid = '$id'";
 		$result = mysqli_query($conn, $query);
 		if(!$result){
 			echo "retrieve data failed!" . mysqli_error($conn);
@@ -221,33 +221,79 @@ function setUserId($name, $address, $city, $zip_code, $country)
 		$row = mysqli_fetch_assoc($result);
 		return $row['orderid'];
 	}
-
+/*
     function insertIntoOrder($conn, $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country)
     {
-        $query = "INSERT INTO orders (column1, column2, column3, column4, column5, column6, column7, column8) VALUES 
-        ('', '$id', '$total_price', '$date', '$ship_name', '$ship_address', '$ship_city', '$ship_zip_code', '$ship_country')";
-        $result = mysqli_query($conn, $query);
+        // Modify the query to include the correct column names and placeholders for values
+        $query = "INSERT INTO orders (customerid, amount, date, ship_name, ship_address, ship_city, ship_zip_code, ship_country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        // Prepare the query
+        $stmt = mysqli_prepare($conn, $query);
     
-        if(!$result){
+        // Bind parameters to the prepared statement
+        mysqli_stmt_bind_param($stmt, "idsssss", $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country);
+        
+        // Execute the statement
+        $result = mysqli_stmt_execute($stmt);
+    
+        if (!$result) {
             echo "Insert orders failed " . mysqli_error($conn);
             exit;
         }
     }
+    */
+
+    //insertIntoOrder with debugging and trimming
+    function insertIntoOrder($conn, $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country)
+    {
+        // Trim input data to remove leading and trailing spaces
+        $ship_name = trim($ship_name);
+        $ship_address = trim($ship_address);
+        $ship_city = trim($ship_city);
+        $ship_zip_code = trim($ship_zip_code);
+        $ship_country = trim($ship_country);
+    
+        // Modify the query to include the correct column names and placeholders for values
+        $query = "INSERT INTO orders (customerid, amount, date, ship_name, ship_address, ship_city, ship_zip_code, ship_country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        echo "Query: $query<br>"; // Debugging
+    
+        // Prepare the query
+        $stmt = mysqli_prepare($conn, $query);
+    
+        var_dump($stmt); // Debugging
+        
+        // Bind parameters to the prepared statement
+        mysqli_stmt_bind_param($stmt, "idssssss", $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country);
+    
+        // Execute the statement
+        $result = mysqli_stmt_execute($stmt);
+    
+        var_dump($result); // Debugging
+    
+        if (!$result) {
+            echo "Insert orders failed: " . mysqli_error($conn);
+            exit;
+        } else {
+            echo "Insert orders succeeded<br>"; // Debugging
+        }
+    }
     
 
-	function getbookprice($isbn)
-    {
-		$conn = db_connect();
-		$query = "SELECT book_price FROM book WHERE book_isbn = '$isbn'";
-		$result = mysqli_query($conn, $query);
-		if(!$result){
-			echo "get book price failed! " . mysqli_error($conn);
-			exit;
-		}
-		$row = mysqli_fetch_assoc($result);
-		return $row['book_price'];
-	}
-    
+function getbookprice($conn, $isbn)
+{
+    $query = "SELECT book_price FROM book WHERE book_isbn = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "s", $isbn);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        echo "get book price failed! " . mysqli_error($conn);
+        exit;
+    }
+    $row = mysqli_fetch_assoc($result);
+    return $row['book_price'];
+}
 
 	function getPubName($conn, $pubid)
     {
@@ -340,9 +386,8 @@ function getAll($conn)
     return $result;
 }
 
-function isEmailExists($email)
+function isEmailExists($conn, $email)
 {
-    $conn = db_connect();
     $email = mysqli_real_escape_string($conn, $email);
     $query = "SELECT * FROM user WHERE email = '$email'";
     $result = mysqli_query($conn, $query);
@@ -416,6 +461,28 @@ function getAllAuthors($conn)
 
     return $authors;
 }
+function getAllAuthorsWithBookCount($conn)
+{
+    $query = "SELECT a.*, COUNT(ba.book_isbn) AS book_count
+              FROM author a
+              LEFT JOIN book_author ba ON a.author_id = ba.author_id
+              GROUP BY a.author_id";
+
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        echo "Can't retrieve data: " . mysqli_error($conn);
+        exit;
+    }
+
+    $authors = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $authors[] = $row;
+    }
+
+    return $authors;
+}
+
 function countWords($text) {
     // Remove HTML tags and trim whitespaces
     $cleanText = trim(strip_tags($text));
@@ -424,4 +491,23 @@ function countWords($text) {
     $wordCount = str_word_count($cleanText);
 
     return $wordCount;
+}
+
+function checkLoggedIn() {
+
+    // Check if the user is logged in
+    if (!isset($_SESSION['user_id'])) {
+        // Set the redirect message
+        $_SESSION['redirect_message'] = 'cart';
+        // Redirect the user to the login page
+        header("Location: login.php");
+        exit;
+    }
+}
+function isLoggedIn() {
+
+    // Check if the user is logged in. If he is = true
+    if (isset($_SESSION['user_id'])) {
+        return true;
+    }
 }

@@ -5,7 +5,7 @@
 
         </footer>
         <div class="copyright text-center bg-dark text-white py-2">
-         <p>&copy; <?php echo date('Y'); ?> All Rights Reserved &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Designed by Filip Lhotka</a></p>
+         <p>&copy; <?php echo date('Y'); ?> Vse pravice pridržane. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Izdelava strani - Filip Lhotka</a></p>
         </div>
  <!-- /container -->
 

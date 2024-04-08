@@ -21,38 +21,30 @@ if (!$result) {
 
 $row = mysqli_fetch_assoc($result);
 
-// Author editing if Save change is chosen
-if (isset($_POST['save_change'])) {
-
-    // Get the author data from the form
-    $author_name = mysqli_real_escape_string($conn, trim($_POST['author_name']));
-    $author_description = mysqli_real_escape_string($conn, trim($_POST['author_description']));
-
-    // Validate input
-    if (empty($author_name)) {
-        echo "Author name is required";
-        exit;
-    }
-
-    // Update the author data in the database
-    $query = "UPDATE author SET  
-        author_name = '$author_name', 
-        author_description = '$author_description'
-        WHERE author_id = '$author_id'
-    ";
-
-    // Execute the query to update the author in the database
-    $result = mysqli_query($conn, $query);
-    if (!$result) {
-        echo "Can't update data " . mysqli_error($conn);
-        exit;
-    }
-
-    // Redirect to the specified location
-    header("Location: authoredit.php?author_id=$author_id");
+// Get books linked to the author
+$bookQuery = "SELECT b.* FROM book b JOIN book_author ba ON b.book_isbn = ba.book_isbn WHERE ba.author_id = '$author_id'";
+$bookResult = mysqli_query($conn, $bookQuery);
+if (!$bookResult) {
+    echo "Can't retrieve books " . mysqli_error($conn);
+    exit;
 }
 ?>
 
+<h2>Author Management</h2>
+
+<!-- Display books by the author -->
+<h3>Books:</h3>
+<?php if (mysqli_num_rows($bookResult) > 0) { ?>
+    <ul>
+        <?php while ($bookRow = mysqli_fetch_assoc($bookResult)) { ?>
+            <li><a href="bookedit.php?bookisbn=<?php echo $bookRow['book_isbn']; ?>"><?php echo $bookRow['book_title']; ?></a></li>
+        <?php } ?>
+    </ul>
+<?php } else { ?>
+    <p>No books found for this author.</p>
+<?php } ?>
+
+<!-- Form to edit author details -->
 <form method="post" action="authoredit.php?author_id=<?php echo $author_id; ?>">
     <table class="table">
         <tr>
@@ -65,38 +57,24 @@ if (isset($_POST['save_change'])) {
         </tr>
         <tr>
             <th style="vertical-align: middle;">Description</th>
-            <td><textarea name="author_description" cols="60" rows="5"><?php echo $row['author_description']; ?></textarea></td>
+            <td><textarea id="author_description" name="author_description" cols="60" rows="5"><?php echo $row['author_description']; ?></textarea></td>
         </tr>
         <tr>
             <td colspan="2">
                 <input type="submit" name="save_change" value="Save changes" class="btn btn-success">
                 <input type="reset" value="Reset" class="btn btn-danger">
-                <a href="author.php" class="btn btn-default">Go back</a>
+                <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
             </td>
         </tr>
     </table>
 </form>
-
 <script>
-    // Function to toggle visibility and position of the input for writing new author or publisher
-    function toggleNewInput(selectElement, inputElement) {
-        inputElement.style.display = (selectElement.value === 'new_author' || selectElement.value === 'new_publisher') ? 'inline-block' : 'none';
-        inputElement.style.verticalAlign = (selectElement.value === 'new_author' || selectElement.value === 'new_publisher') ? 'top' : 'middle';
+    // Function to go back to the previous page
+    function goBack() {
+        window.history.back();
     }
-
-    // Attach the function to the change event of author and publisher dropdowns
-    const authorDropdown = document.querySelector('select[name="author"]');
-    const publisherDropdown = document.querySelector('select[name="publisher"]');
-    const authorInput = document.querySelector('input[name="new_author"]');
-    const publisherInput = document.querySelector('input[name="new_publisher"]');
-
-    authorDropdown.addEventListener('change', () => toggleNewInput(authorDropdown, authorInput));
-    publisherDropdown.addEventListener('change', () => toggleNewInput(publisherDropdown, publisherInput));
-
-    // Trigger the function on page load to set the initial position
-    toggleNewInput(authorDropdown, authorInput);
-    toggleNewInput(publisherDropdown, publisherInput);
-
+</script>
+<script>
     // Function to auto-resize textarea and adjust input sizes
     function autoResizeInputs() {
         // Resize text input fields
@@ -107,16 +85,22 @@ if (isset($_POST['save_change'])) {
         });
 
         // Resize textarea
-        const textarea = document.getElementById('descriptionTextarea');
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
+        const textarea = document.getElementById('author_description');
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
     }
 
     // Attach the function to text inputs and textarea's input event
     document.querySelectorAll('input[type="text"]').forEach(input => {
         input.addEventListener('input', autoResizeInputs);
     });
-    document.getElementById('descriptionTextarea').addEventListener('input', autoResizeInputs);
+
+    const authorDescriptionTextarea = document.getElementById('author_description');
+    if (authorDescriptionTextarea) {
+        authorDescriptionTextarea.addEventListener('input', autoResizeInputs);
+    }
 
     // Trigger the function on page load to adjust sizes if there's initial content
     window.addEventListener('load', autoResizeInputs);

@@ -11,8 +11,7 @@
         // Validate and sanitize the input (add additional validation if needed)
 
         // Check if the email already exists
-        if (!isEmailExists($newEmail)) {
-            $conn = db_connect();
+        if (!isEmailExists($conn, $newEmail)) {
         
             // Add the user to the database
             if (addUser($conn, $newEmail, $newUsername, $newPassword)) {

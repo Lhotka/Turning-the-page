@@ -35,15 +35,15 @@ if ($userID) {
 
     <div class="container">
         <h2>Welcome <?php echo $username; ?>!</h2>
-
-        <h3>User Settings</h3>
         <p>Email: <?php echo $email; ?></p>
 
-        <h3>Order History</h3>
-        <!-- Add logic to retrieve and display order history -->
+        <a href="userorders.php" class="btn btn-info" style="display: inline-block; margin-right: 10px;">Orders</a>
+        <!-- Add logic -->
 
-        <!-- Add more sections as needed based on your requirements -->
+        
+        <!-- Add more sections-->
 
+        
         <!-- Sign-out button -->
     <form method="post" action="userdash.php">
         <input type="submit" name="logout" class="btn btn-danger" value="Sign Out">

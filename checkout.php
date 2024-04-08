@@ -1,95 +1,79 @@
 <?php
-	$title = "Checkout";
+	$title = "Blagajna";
 	require "./template/header.php";
-	// the shopping cart needs sessions, to start one
+    
+    // Check if the user is logged in
+    checkLoggedIn();
+
+	// košarica potrebuje seje, da se začne ena
 	/*
-		Array of session(
-			cart => array (
-				book_isbn (get from $_GET['book_isbn']) => number of books
+		Seznam sej(
+			košarica => array (
+				book_isbn (pridobi iz $_GET['book_isbn']) => število knjig
 			),
-			items => 0,
-			total_price => '0.00'
+			predmeti => 0,
+			skupna_cena => '0.00'
 		)
 	*/
 
 	if(isset($_SESSION['cart']) && (array_count_values($_SESSION['cart']))){
-?>
-	<table class="table">
-		<tr>
-			<th>Item</th>
-			<th>Price</th>
-	    	<th>Quantity</th>
-	    	<th>Total</th>
-	    </tr>
-	    	<?php
-			    foreach($_SESSION['cart'] as $isbn => $qty){
-					$conn = db_connect();
-					$book = mysqli_fetch_assoc(getBookByIsbn($conn, $isbn));
-			?>
-		<tr>
-			<td><?php echo $book['book_title'] . " by " . $book['book_author']; ?></td>
-			<td><?php echo "€" . $book['book_price']; ?></td>
-			<td><?php echo $qty; ?></td>
-			<td><?php echo "€" . $qty * $book['book_price']; ?></td>
-		</tr>
-		<?php } ?>
-		<tr>
-			<th>&nbsp;</th>
-			<th>&nbsp;</th>
-			<th><?php echo $_SESSION['total_items']; ?></th>
-			<th><?php echo "€" . $_SESSION['total_price']; ?></th>
-		</tr>
-	</table>
-	<!-- Form for user details and purchase button -->
-	<form method="post" action="purchase.php" class="form-horizontal">
+
+    require_once 'template/cartnoedit.php';
+    ?>
+	<!-- Obrazec za uporabnikove podrobnosti in gumb za nakup -->
+    <!-- Forma za zbiranje podrobnosti uporabnika -->
+    <form method="post" action="purchase.php" class="form-horizontal">
+        <!-- Sporočilo o napaki za nepopolna polja -->
         <?php if(isset($_SESSION['err']) && $_SESSION['err'] == 1){ ?>
-            <p class="text-danger">All fields have to be filled</p>
+            <p class="text-danger">Vsa polja morajo biti izpolnjena</p>
         <?php } ?>
-        <!-- User details input fields -->
+        
+        <!-- Polja za podrobnosti uporabnika -->
         <div class="form-group">
-            <label for="name" class="control-label col-md-4">Name</label>
+            <label for="ship_name" class="control-label col-md-4">Ime</label>
             <div class="col-md-4">
-                <input type="text" id="name" name="name" class="form-control" autocomplete="name">
+                <input type="text" id="ship_name" name="ship_name" class="form-control" autocomplete="name" data-placeholder-en="Name">
             </div>
         </div>
         <div class="form-group">
-            <label for="address" class="control-label col-md-4">Address</label>
+            <label for="ship_address" class="control-label col-md-4">Naslov</label>
             <div class="col-md-4">
-                <input type="text" id="address" name="address" class="form-control" autocomplete="address">
+                <input type="text" id="ship_address" name="ship_address" class="form-control" autocomplete="address" data-placeholder-en="Address">
             </div>
         </div>
         <div class="form-group">
-            <label for="city" class="control-label col-md-4">City</label>
+            <label for="ship_city" class="control-label col-md-4">Mesto</label>
             <div class="col-md-4">
-                <input type="text" id="city" name="city" class="form-control" autocomplete="address-level2">
+                <input type="text" id="ship_city" name="ship_city" class="form-control" autocomplete="address-level2" data-placeholder-en="City">
             </div>
         </div>
         <div class="form-group">
-            <label for="zip_code" class="control-label col-md-4">Zip Code</label>
+            <label for="ship_zip_code" class="control-label col-md-4">Poštna številka</label>
             <div class="col-md-4">
-                <input type="text" id="zip_code" name="zip_code" class="form-control" autocomplete="postal-code">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="country" class="control-label col-md-4">Country</label>
-            <div class="col-md-4">
-                <input type="text" id="country" name="country" class="form-control" autocomplete="country">
+                <input type="text" id="ship_zip_code" name="ship_zip_code" class="form-control" autocomplete="postal-code" data-placeholder-en="Zip Code">
             </div>
         </div>
 
-        <!-- Button Group in the Same Row -->
+        <div class="form-group">
+            <label for="ship_country" class="control-label col-md-4">Država</label>
+            <div class="col-md-4">
+                <input type="text" id="ship_country" name="ship_country" class="form-control" value="Slovenija" readonly>
+            </div>
+        </div>
 
+        <!-- Gumbi v isti vrstici -->
         <div class="form-group">
             <div class="col-lg-10 col-lg-offset-4">
-                <button type="submit" name="submit" class="btn btn-primary" value="Continue">Continue</button>
-                <a href="cart.php" class="btn btn-default">Back to Cart</a>
+                <button type="submit" name="submit" class="btn btn-primary" value="Nadaljuj">Nadaljuj</button>
+                <a href="cart.php" class="btn btn-default">Nazaj na košarico</a>
             </div>
         </div>
     </form>
 
+
 <?php
 	} else {
-		echo "<p class=\"text-warning\">Your cart is empty!</p>";
+		echo "<p class=\"text-warning\">Vaša košarica je prazna!</p>";
 	}
 	require_once "./template/footer.php";
 ?>

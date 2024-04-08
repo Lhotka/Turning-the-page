@@ -225,12 +225,18 @@ if (isset($_POST['add'])) {
                 <td colspan="2">
                     <input type="submit" name="add" value="Add book" class="btn btn-success">
                     <input type="reset" value="Reset" class="btn btn-danger">
-                    <a href="book.php" class="btn btn-default">Go back</a>
+                    <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
                 </td>
             </tr>
         </table>
     </form>
-
+    
+<script>
+    // Function to go back to the previous page
+    function goBack() {
+        window.history.back();
+    }
+</script>
 <script>
     // Function to toggle visibility and position of the input for writing new author or publisher
     function toggleNewInput(selectElement, inputElement) {

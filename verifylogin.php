@@ -1,9 +1,6 @@
 <?php
-    $title = "Login";
+    $title = "Login verify";
     require_once "./template/header.php";
-
-    // Include your database connection file
-    // Assuming $conn is already established
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Sanitize and retrieve user input

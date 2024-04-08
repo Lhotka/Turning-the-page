@@ -45,6 +45,10 @@
 
    <!-- <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
     <!-- <link href="./bootstrap/css/bootstrap-theme.min.css" rel="stylesheet"> -->
+
+    <!-- credit card icons -->
+    <script src="https://kit.fontawesome.com/14c1c695aa.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   </head>
 
   <body>

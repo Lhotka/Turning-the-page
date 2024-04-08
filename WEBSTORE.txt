@@ -1,28 +1,26 @@
 ADD
-filter/query by author, price, ...
+filter/query by author ...
 search bar
 reviews
-sortiranje knjig in filtri
-zaloga knjig (book)
 user dashboard settings
-davek (razlicni davki vrsta knjig)
+davek (razlicni davki vrsta knjig??)
 popust (knjiga ali stranka št nakupov)
-Admin dashboard missing other elements
+Admin dashboard - Order management
 dvojezično z cookiji
-Book quantity 
-Type of book
-Published: 03/07/2008
-ISBN: 9780141036144
+Type of book / categories, filters
+ISBN same format for all? (9780141036144)
 Length: 336 pages
 Dimensions: 181mm x 20mm x 111mm
 Weight: 184g
-Price: £8.99
 In stock, out of stock..
+Multiple authors for one book
+način plačila v tabelo orders
+when adding to cart, check if user is logged in, if he isnt - redirect
+     to login page (and maybe put the item in the cart once he's logged in)
 
 FIX
 order line not fully finished
 shipping - ship_country (raje izbira namesto vnosa)
-Remove date ed in book page
 
 FINISH
 publisher edit complete

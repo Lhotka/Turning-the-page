@@ -12,7 +12,7 @@ if (isset($_GET['bookisbn'])) {
 }
 
 // Get book data
-$query = "SELECT * FROM book WHERE book_isbn = '$book_isbn'";
+$query = "SELECT *, DATE_FORMAT(book_pub_date, '%Y-%m-%d') AS book_pub_date_formatted FROM book WHERE book_isbn = '$book_isbn'";
 $result = mysqli_query($conn, $query);
 if (!$result) {
     echo "Can't retrieve data " . mysqli_error($conn);
@@ -31,16 +31,11 @@ if (isset($_POST['save_change'])) {
     $newAuthorName = mysqli_real_escape_string($conn, trim($_POST['new_author']));
     $publisher = mysqli_real_escape_string($conn, trim($_POST['publisher']));
     $newPublisherName = mysqli_real_escape_string($conn, trim($_POST['new_publisher']));
+    $pubDate = mysqli_real_escape_string($conn, $_POST['pub_date']);
     $descr = mysqli_real_escape_string($conn, trim($_POST['descr']));
     $price = floatval(trim($_POST['price']));
+    $quantity = intval(trim($_POST['quantity']));
 
-    /*
-    // Validate input
-    if (empty($isbn) || empty($title) || empty($authorId) || empty($publisher) || empty($descr) || empty($price) ) {
-        echo "All fields are required";
-        exit;
-    }
-    */
     // Validate input
     if (empty($title) || ($authorId === 'new_author' && empty($newAuthorName)) || empty($publisher) || empty($descr) || empty($price)) {
         echo "All fields are required";
@@ -191,8 +186,10 @@ if (isset($_POST['save_change'])) {
         book_title = '$title', 
         book_descr = '$descr', 
         book_price = '$price',
+        book_quantity = '$quantity',
         author_id = '$authorId',
-        publisher_id = '$publisherId'
+        publisher_id = '$publisherId',
+        book_pub_date = '$pubDate'
         WHERE book_isbn = '$isbn'
     ";
 
@@ -270,6 +267,10 @@ if (isset($_POST['save_change'])) {
             </td>
         </tr>
         <tr>
+            <th style="vertical-align: middle;">Publication Date</th>
+            <td><input type="date" name="pub_date" value="<?php echo $row['book_pub_date_formatted']; ?>" required></td>
+        </tr>
+        <tr>
             <th style="vertical-align: middle;">Image</th>
             <td style="display: flex; align-items: center;">
                 <?php
@@ -292,6 +293,10 @@ if (isset($_POST['save_change'])) {
             <td><input type="text" name="price" value="<?php echo $row['book_price']; ?>" required></td>
         </tr>
         <tr>
+            <th style="vertical-align: middle;">Quantity</th>
+            <td><input type="number" name="quantity" value="<?php echo $row['book_quantity']; ?>" required></td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="submit" name="save_change" value="Save changes" class="btn btn-success">
                 <input type="reset" value="Reset" class="btn btn-danger">
@@ -301,6 +306,12 @@ if (isset($_POST['save_change'])) {
     </table>
 </form>
 
+<script>
+    // Function to go back to the previous page
+    function goBack() {
+        window.history.back();
+    }
+</script>
 <script>
     // Function to toggle visibility and position of the input for writing new author or publisher
     function toggleNewInput(selectElement, inputElement) {

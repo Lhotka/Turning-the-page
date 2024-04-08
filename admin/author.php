@@ -18,22 +18,32 @@
             echo "New author added successfully!";
         }
     }
-
+    
     // Handle form submission for deleting an author
     if(isset($_POST['delete_author'])) {
         $deleteAuthorID = $_POST['delete_author_id'];
         
-        // Delete the selected author from the database
-        $deleteQuery = "DELETE FROM author WHERE author_id = '$deleteAuthorID'";
-        $deleteResult = mysqli_query($conn, $deleteQuery);
+        // Check if the author has associated books
+        $checkQuery = "SELECT COUNT(*) AS book_count FROM book_author WHERE author_id = '$deleteAuthorID'";
+        $checkResult = mysqli_query($conn, $checkQuery);
+        $bookCount = mysqli_fetch_assoc($checkResult)['book_count'];
 
-        if(!$deleteResult) {
-            echo "Error deleting author: " . mysqli_error($conn);
+        if($bookCount > 0) {
+            echo "Error: This author cannot be deleted because they are linked to $bookCount book(s).";
+        } else {
+            // Delete the selected author from the database
+            $deleteQuery = "DELETE FROM author WHERE author_id = '$deleteAuthorID'";
+            $deleteResult = mysqli_query($conn, $deleteQuery);
+
+            if(!$deleteResult) {
+                echo "Error deleting author: " . mysqli_error($conn);
+            }
         }
     }
 
-    // Fetch all authors from the database
-    $authors = getAllAuthors($conn);
+
+    // Fetch all authors with associated book count from the database
+    $authors = getAllAuthorsWithBookCount($conn);
 ?>
 
 <h2>Author Management</h2>
@@ -50,6 +60,7 @@
     <tr>
         <th>Author ID</th>
         <th>Author Name</th>
+        <th>Book Count</th>
         <th>Description</th>
         <th>Action</th>
     </tr>
@@ -57,7 +68,7 @@
         <tr>
             <td><?php echo $author['author_id']; ?></td>
             <td><?php echo $author['author_name']; ?></td>
-            <!-- Display word count or EMPTY if description is empty -->
+            <td><?php echo $author['book_count']; ?></td>
             <td><?php echo empty($author['author_description']) ? 'EMPTY' : (countWords($author['author_description']) . " words"); ?></td>
             <td>
                 <!-- Edit Button -->
