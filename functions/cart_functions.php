@@ -12,8 +12,8 @@ function total_price($conn, $cart)
     $price = 0.0;
     if (is_array($cart)) {
         foreach ($cart as $isbn => $qty) {
-            // Pass $conn as the first argument to getbookprice()
-            $bookprice = getbookprice($conn, $isbn);
+            // Pass $conn as the first argument to getBookPrice()
+            $bookprice = getBookPrice($conn, $isbn);
             if ($bookprice) {
                 $price += $bookprice * $qty;
             }

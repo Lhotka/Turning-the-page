@@ -19,11 +19,13 @@ when adding to cart, check if user is logged in, if he isnt - redirect
      to login page (and maybe put the item in the cart once he's logged in)
 save carts to accounts
 sortiranje gori doli (kot gump opcija)
-another db_connect for admin/user
+another dbConnect for admin/user
+admin sorting books by columns
 
 FIX
 order line not fully finished
 shipping - ship_country (raje izbira namesto vnosa)
+dbConnectAdmin on admin pages
 
 FINISH
 publisher edit complete
@@ -37,6 +39,12 @@ GRANT ALL PRIVILEGES ON database_name.* TO 'new_user'@'localhost';
 
 
 session start šele ko naredi uspesen login
-dbconnect zgolj tam kjer rabis bazo
 probi vse names dinamicni fiksno
 ...
+
+conn=dbconnect zgolj tam kjer rabis bazo
+
+Your order has been processed successfully. 
+    Please check your email to get your order confirmation and shipping details!
+     Your cart is now empty !! also so the user cant just reload the order processing page
+    these two are missing

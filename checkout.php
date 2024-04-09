@@ -5,6 +5,8 @@ require "./template/header.php";
 // Check if the user is logged in
 checkLoggedIn();
 
+$conn=dbConnect();
+
 // košarica potrebuje seje, da se začne ena
 /*
 		Seznam sej(

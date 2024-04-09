@@ -2,7 +2,7 @@
 $title = "Edit book";
 require_once "../template/header.php";
 checkAdmin();
-$conn=db_connect();
+$conn=dbConnectAdmin();
 
 //Get the ISBN
 if (isset($_GET['bookisbn'])) {

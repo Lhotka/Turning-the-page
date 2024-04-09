@@ -1,5 +1,5 @@
 <?php
-$conn=db_connect();
+$conn=dbConnect();
 
 // Preveri, ali je ime avtorja podano v URL parametru
 if (isset($_GET['name'])) {

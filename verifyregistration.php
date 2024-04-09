@@ -2,7 +2,7 @@
 $title = "Registration verification";
 require_once "./template/header.php";
 
-$conn=db_connect();
+$conn=dbConnect();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
     // Retrieve user input
@@ -21,6 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
             // Get the user ID
             $userID = mysqli_insert_id($conn);
 
+            session_start();
+            
             // Set session variables to indicate user is logged in
             $_SESSION['user_email'] = $newEmail;
             $_SESSION['user_id'] = $userID;

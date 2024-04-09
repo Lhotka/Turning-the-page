@@ -3,6 +3,7 @@
 $title = "Add New User";
 require_once "../template/header.php";
 checkAdmin();
+$conn=dbConnectAdmin();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // User addition code here...

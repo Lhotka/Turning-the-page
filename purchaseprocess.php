@@ -2,12 +2,11 @@
 $title = "Purchase Process";
 require_once "./template/header.php";
 
-$conn=db_connect();
-
 // Check if the user is logged in
 checkLoggedIn();
 
-print_r($_SESSION);
+$conn = dbConnect();
+
 foreach ($_POST as $key => $value) {
     if (trim($value) == '') {
         $_SESSION['err'] = 0;
@@ -17,6 +16,7 @@ foreach ($_POST as $key => $value) {
 
 if ($_SESSION['err'] == 0) {
     header("Location: checkout.php");
+    exit(); // Add exit to prevent further execution
 } else {
     unset($_SESSION['err']);
 }
@@ -44,42 +44,37 @@ if (isset($_SESSION['user_id'])) {
     $customerid = $_SESSION['user_id'];
 }
 
-// Insert order into the database
-echo "Inserting order...<br>"; // Debugging
-echo "$ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country";
-insertIntoOrder($conn, $customerid, $_SESSION['total_price'], $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country);
+// Insert into orders table and store the result
+$insertOrderResult = insertIntoOrder($conn, $customerid, $_SESSION['total_price'], $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country);
 
-// Retrieve the order ID
-$orderid = getOrderId($conn, $customerid);
+// Check if the insertion was successful
+if ($insertOrderResult) {
+    // Retrieve the order ID
+    $orderid = getOrderId($conn, $customerid);
 
-// Insert order items into the database
-foreach ($_SESSION['cart'] as $isbn => $qty) {
-    $bookprice = getbookprice($conn, $isbn);
+    // Insert order items into the database
+    foreach ($_SESSION['cart'] as $isbn => $qty) {
+        $bookprice = getBookPrice($conn, $isbn);
 
-    // Use prepared statements to prevent SQL injection
-    $query = "INSERT INTO order_items (orderid, book_isbn, book_price, quantity) VALUES (?, ?, ?, ?)";
-    $stmt = mysqli_prepare($conn, $query);
+        // Use prepared statements to prevent SQL injection
+        $query = "INSERT INTO order_items (orderid, book_isbn, book_price, quantity) VALUES (?, ?, ?, ?)";
+        $stmt = mysqli_prepare($conn, $query);
 
-    // Debugging the data types and values
-    echo "Data types and values: ";
-    var_dump($orderid, $isbn, $bookprice, $qty);
+        mysqli_stmt_bind_param($stmt, "isdi", $orderid, $isbn, $bookprice, $qty);
+        $result = mysqli_stmt_execute($stmt);
 
-    // Adjusted data types: "isdi" -> "isdii"
-    mysqli_stmt_bind_param($stmt, "isdi", $orderid, $isbn, $bookprice, $qty);
-    $result = mysqli_stmt_execute($stmt);
-
-    if (!$result) {
-        echo "Insert value false!" . mysqli_error($conn);
-        exit;
+        if (!$result) {
+            echo "Insert value false!" . mysqli_error($conn);
+            exit;
+        }
     }
+
+    // Display success message
+    echo '<div class="alert alert-success" role="alert" style="text-align:center";>Your order has been processed successfully.<br/>Please check your email to get your order confirmation and shipping details!<br/>Your cart is now empty.</div>';
+
+} else {
+    // Display error message
+    echo '<div class="alert alert-danger" role="alert" style="text-align:center";>There was an error processing your order. Please try again later or contact support.</div>';
 }
 
-//session_unset();
-
-?>
-
-<p class="lead text-success">Your order has been processed successfully. Please check your email to get your order confirmation and shipping details! Your cart is now empty.</p>
-
-<?php
 require_once "./template/footer.php";
-?>

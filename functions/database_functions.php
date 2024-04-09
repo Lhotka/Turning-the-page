@@ -1,15 +1,20 @@
 <?php
-function db_connect()
+function dbConnect()
 {
-    $conn = mysqli_connect("localhost", "root", "", "final");
+    $conn = mysqli_connect("localhost", "user", "", "final");
     if (!$conn) {
         die("Can't connect to the database.");
     }
     return $conn;
 }
-
-
-
+function dbConnectAdmin()
+{
+    $conn = mysqli_connect("localhost", "admin", "U15weXS#KySu2gVePtL%", "final");
+    if (!$conn) {
+        die("Can't connect to the database.");
+    }
+    return $conn;
+}
 function checkAndResizeImage($sourcePath, $targetWidth)
 // Check and resize image if needed, also check that it's less than 5MB
 {
@@ -257,12 +262,8 @@ function insertIntoOrder($conn, $id, $total_price, $date, $ship_name, $ship_addr
     // Modify the query to include the correct column names and placeholders for values
     $query = "INSERT INTO orders (customerid, amount, date, ship_name, ship_address, ship_city, ship_zip_code, ship_country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-    echo "Query: $query<br>"; // Debugging
-
     // Prepare the query
     $stmt = mysqli_prepare($conn, $query);
-
-    var_dump($stmt); // Debugging
 
     // Bind parameters to the prepared statement
     mysqli_stmt_bind_param($stmt, "idssssss", $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country);
@@ -270,31 +271,10 @@ function insertIntoOrder($conn, $id, $total_price, $date, $ship_name, $ship_addr
     // Execute the statement
     $result = mysqli_stmt_execute($stmt);
 
-    var_dump($result); // Debugging
-
-    if (!$result) {
-        echo "Insert orders failed: " . mysqli_error($conn);
-        exit;
-    } else {
-        echo "Insert orders succeeded<br>"; // Debugging
-    }
+    // Return true if the insertion was successful, false otherwise
+    return $result;
 }
 
-
-function getbookprice($conn, $isbn)
-{
-    $query = "SELECT book_price FROM book WHERE book_isbn = ?";
-    $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, "s", $isbn);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    if (!$result) {
-        echo "get book price failed! " . mysqli_error($conn);
-        exit;
-    }
-    $row = mysqli_fetch_assoc($result);
-    return $row['book_price'];
-}
 
 function getPubName($conn, $pubid)
 {
@@ -326,7 +306,7 @@ function getAllPublishers($conn)
     return $result;
 }
 
-function getAllBooks($conn, $sortingOption = 'latest')
+function getAllBooks($conn, $sortingOption = 'latest', $limit = null, $offset = 0)
 {
     $allowedSortingOptions = ['latest', 'popular', 'alphabetical_asc', 'alphabetical_desc', 'price_asc', 'price_desc', 'rating'];
 
@@ -360,12 +340,17 @@ function getAllBooks($conn, $sortingOption = 'latest')
             $orderBy = 'b.date_added DESC'; // Default to 'latest'
     }
 
+    $limitClause = '';
+    if ($limit !== null) {
+        $limitClause = "LIMIT $limit OFFSET $offset";
+    }
+
     $query = "SELECT b.*, GROUP_CONCAT(a.author_name SEPARATOR ', ') AS authors
               FROM book b
               LEFT JOIN book_author ba ON b.book_isbn = ba.book_isbn
               LEFT JOIN author a ON ba.author_id = a.author_id
               GROUP BY b.book_isbn
-              ORDER BY $orderBy";
+              ORDER BY $orderBy $limitClause";
 
     $result = mysqli_query($conn, $query);
 
@@ -376,17 +361,72 @@ function getAllBooks($conn, $sortingOption = 'latest')
 
     return $result;
 }
-function getAll($conn)
+function getAllBooksAdmin($conn, $sortingOption = 'latest', $limit = null, $offset = 0, $orderByColumn = null, $orderByDirection = 'ASC')
 {
-    $query = "SELECT * from book ORDER BY book_isbn DESC";
+    $allowedColumns = ['isbn', 'title', 'author', 'publisher', 'price', 'stock'];
+
+    // Validate the sorting column
+    if (!in_array($sortingOption, $allowedColumns)) {
+        $sortingOption = 'latest'; // Default to 'latest' if an invalid column is provided
+    }
+
+    // Set the ORDER BY clause based on the selected column and direction
+    if ($orderByColumn && in_array($orderByColumn, $allowedColumns)) {
+        $orderBy = 'b.' . $orderByColumn . ' ' . $orderByDirection;
+    } else {
+        // Default to sorting by ISBN if no valid column is provided
+        $orderBy = 'b.book_isbn ASC';
+    }
+
+    $limitClause = '';
+    if ($limit !== null) {
+        $limitClause = "LIMIT $limit OFFSET $offset";
+    }
+
+    $query = "SELECT b.*, GROUP_CONCAT(a.author_name SEPARATOR ', ') AS authors
+              FROM book b
+              LEFT JOIN book_author ba ON b.book_isbn = ba.book_isbn
+              LEFT JOIN author a ON ba.author_id = a.author_id
+              GROUP BY b.book_isbn
+              ORDER BY $orderBy $limitClause";
+
     $result = mysqli_query($conn, $query);
+
     if (!$result) {
         echo "Can't retrieve data " . mysqli_error($conn);
         exit;
     }
+
     return $result;
 }
+function getBookCount($conn)
+{
+    $query = "SELECT COUNT(*) AS total_count FROM book";
+    $result = mysqli_query($conn, $query);
 
+    if (!$result) {
+        echo "Can't retrieve data: " . mysqli_error($conn);
+        exit;
+    }
+
+    $row = mysqli_fetch_assoc($result);
+    return $row['total_count'];
+}
+
+function getBookPrice($conn, $isbn)
+{
+    $query = "SELECT book_price FROM book WHERE book_isbn = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "s", $isbn);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (!$result) {
+        echo "get book price failed! " . mysqli_error($conn);
+        exit;
+    }
+    $row = mysqli_fetch_assoc($result);
+    return $row['book_price'];
+}
 function isEmailExists($conn, $email)
 {
     $email = mysqli_real_escape_string($conn, $email);

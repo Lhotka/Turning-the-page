@@ -2,7 +2,7 @@
 $title = "Login verify";
 require_once "./template/header.php";
 
-$conn=db_connect();
+$conn = dbConnect();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize and retrieve user input
@@ -26,6 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->num_rows > 0 && password_verify($password, $hashedPassword)) {
             // Password is correct, user is authenticated
+
+            
             // Set session variables
             $_SESSION['user_id'] = $userID;
             $_SESSION['user_email'] = $email; // Add this line to set user_email

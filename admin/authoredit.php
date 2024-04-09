@@ -2,7 +2,7 @@
 $title = "Edit Author";
 require_once "../template/header.php";
 checkAdmin();
-$conn=db_connect();
+$conn=dbConnectAdmin();
 
 // Get the author ID
 if (isset($_GET['author_id'])) {

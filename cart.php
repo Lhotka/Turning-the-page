@@ -3,10 +3,10 @@ $title = "Košarica";
 require "./template/header.php";
 require_once "./functions/cart_functions.php";
 
-$conn=db_connect();
-
 // Check if the user is logged in
 checkLoggedIn();
+
+$conn=dbConnect();
 
 // Pridobi ISBN knjige iz metode POST obrazca
 if (isset($_POST['bookisbn'])) {

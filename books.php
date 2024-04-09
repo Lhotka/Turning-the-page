@@ -2,13 +2,29 @@
 $title = "Vse knjige";
 require_once "./template/header.php";
 
-$conn=db_connect();
+$conn = dbConnect();
+
+// Define the number of books per page
+$booksPerPage = 8;
+
+// Determine the current page number
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// Calculate the SQL OFFSET for pagination
+$offset = ($page - 1) * $booksPerPage;
 
 // Pridobi možnost sortiranja iz parametra poizvedbe (privzeto na 'najnovejše', če ni podano)
 $sortingOption = isset($_GET['sort']) ? $_GET['sort'] : 'latest';
 
-// Pridobi vse knjige glede na možnost sortiranja
-$result = getAllBooks($conn, $sortingOption);
+// Pridobi vse knjige glede na možnost sortiranja in dodaj omejitev za strani
+$result = getAllBooks($conn, $sortingOption, $booksPerPage, $offset);
+
+// Število vseh knjig
+$totalBooks = getBookCount($conn);
+
+// Število strani
+$totalPages = ceil($totalBooks / $booksPerPage);
+
 ?>
 
 <!DOCTYPE html>
@@ -37,39 +53,57 @@ $result = getAllBooks($conn, $sortingOption);
         </select>
     </form>
 
-    <?php
-    $count = 0;
+    <div class="container">
+        <div class="row">
+            <?php
+            $count = 0;
 
-    while ($query_row = mysqli_fetch_assoc($result)) {
-        $avtorji = getAuthorsByISBN($conn, $query_row['book_isbn']);
+            while ($query_row = mysqli_fetch_assoc($result)) {
+                $avtorji = getAuthorsByISBN($conn, $query_row['book_isbn']);
 
-        if ($count % 4 == 0) {
-            echo '<div class="row">';
-        }
-    ?>
-        <div class="col-md-3 text-center">
-            <a href="book.php?bookisbn=<?php echo $query_row['book_isbn']; ?>">
-                <img class="img-responsive img-thumbnail" src="./bootstrap/img/<?php echo $query_row['book_image']; ?>">
-                <p><strong><?php echo $query_row['book_title']; ?></strong></p>
-                <?php
-                foreach ($avtorji as $avtor) {
-                    echo '<a href="author.php?name=' . urlencode($avtor) . '">' . $avtor . '</a>';
-                    if (next($avtorji)) {
-                        echo ', ';
-                    }
-                } ?>
+                if ($count % 4 == 0) {
+                    echo '<div class="row">';
+                }
+            ?>
+                <div class="col-md-3 text-center">
+                    <a href="book.php?bookisbn=<?php echo $query_row['book_isbn']; ?>">
+                        <img class="img-responsive img-thumbnail" src="./bootstrap/img/<?php echo $query_row['book_image']; ?>">
+                        <p><strong><?php echo $query_row['book_title']; ?></strong></p>
+                        <?php
+                        foreach ($avtorji as $avtor) {
+                            echo '<a href="author.php?name=' . urlencode($avtor) . '">' . $avtor . '</a>';
+                            if (next($avtorji)) {
+                                echo ', ';
+                            }
+                        } ?>
+                </div>
+            <?php
+                $count++;
+                if ($count % 4 == 0) {
+                    echo '</div><br>';
+                }
+            }
+
+            // Zapri zadnjo vrstico, če skupno število knjig ni večkratnik števila 4
+            if ($count % 4 != 0) {
+                echo '</div><br>';
+            }
+            ?>
         </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="container">
+        <ul class="pagination justify-content-center">
+            <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                <li class="page-item <?php if ($i === $page) echo 'active'; ?>"><a class="page-link" href="?page=<?php echo $i . '&sort=' . $sortingOption; ?>"><?php echo $i; ?></a></li>
+            <?php endfor; ?>
+        </ul>
+    </div>
+
     <?php
-        $count++;
-        if ($count % 4 == 0) {
-            echo '</div><br>';
-        }
-    }
-
-    // Zapri zadnjo vrstico, če skupno število knjig ni večkratnik števila 4
-    if ($count % 4 != 0) {
-        echo '</div><br>';
-    }
-
     require_once "./template/footer.php";
     ?>
+</body>
+
+</html>

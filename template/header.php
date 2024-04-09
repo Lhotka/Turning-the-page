@@ -29,6 +29,7 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 
     session_destroy();   // destroy session data
 }
 $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+
 ?>
 
 <!DOCTYPE html>

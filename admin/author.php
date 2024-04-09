@@ -1,7 +1,7 @@
 <?php
 $title = "Author Management";
 require_once "../template/header.php";
-$conn=db_connect();
+$conn=dbConnectAdmin();
 checkAdmin();
 
 // Handle form submission for adding a new author

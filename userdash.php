@@ -2,7 +2,6 @@
 $title = "User Dashboard";
 require_once "./template/header.php";
 
-$conn=db_connect();
 
 // Redirect to the login page if the user is not logged in
 if (!isset($_SESSION['user_email'])) {
@@ -27,6 +26,7 @@ $userID = $_SESSION['user_id'];
 
 if ($userID) {
     // User found, retrieve additional information using getUserData function
+    $conn = dbConnect();
     $userData = getUserData($conn, $userID);
 
     // Display user information

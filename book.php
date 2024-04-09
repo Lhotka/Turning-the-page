@@ -2,7 +2,7 @@
 require_once "./functions/database_functions.php";
 $book_isbn = $_GET['bookisbn'];
 
-$conn = db_connect();
+$conn = dbConnect();
 
 // Fetch book details
 $query = "SELECT b.*, GROUP_CONCAT(a.author_name SEPARATOR ', ') AS avtorji

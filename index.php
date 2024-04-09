@@ -2,7 +2,7 @@
 $title = "Turning the page";
 require_once "./template/header.php";
 
-$conn = db_connect();
+$conn = dbConnect();
 
 // Retrieve the latest books
 $row = selectLatestBooks($conn);
