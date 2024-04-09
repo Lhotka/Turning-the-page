@@ -1,5 +1,6 @@
 # Ignore vendor directory
 #/vendor/
 
-# Ignore .env file
+# Ignore .env file and functions
 .env
+.functions/database_functions
