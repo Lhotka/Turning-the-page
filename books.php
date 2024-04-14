@@ -16,11 +16,17 @@ $offset = ($page - 1) * $booksPerPage;
 // Pridobi možnost sortiranja iz parametra poizvedbe (privzeto na 'najnovejše', če ni podano)
 $sortingOption = isset($_GET['sort']) ? $_GET['sort'] : 'latest';
 
-// Pridobi vse knjige glede na možnost sortiranja in dodaj omejitev za strani
-$result = getAllBooks($conn, $sortingOption, $booksPerPage, $offset);
-
-// Število vseh knjig
-$totalBooks = getBookCount($conn);
+// Check if search query is present
+if (isset($_GET['q']) && !empty($_GET['q'])) {
+    $searchQuery = mysqli_real_escape_string($conn, $_GET['q']);
+    $result = searchBooks($conn, $searchQuery, $booksPerPage, $offset);
+    $totalBooks = countSearchBooks($conn, $searchQuery);
+} else {
+    // Pridobi vse knjige glede na možnost sortiranja in dodaj omejitev za strani
+    $result = getAllBooks($conn, $sortingOption, $booksPerPage, $offset);
+    // Število vseh knjig
+    $totalBooks = getBookCount($conn);
+}
 
 // Število strani
 $totalPages = ceil($totalBooks / $booksPerPage);
@@ -67,7 +73,7 @@ $totalPages = ceil($totalBooks / $booksPerPage);
             ?>
                 <div class="col-md-3 text-center">
                     <a href="book.php?bookisbn=<?php echo $query_row['book_isbn']; ?>">
-                        <img class="img-responsive img-thumbnail" src="./bootstrap/img/<?php echo $query_row['book_image']; ?>">
+                        <img class="img-responsive img-thumbnail" style="margin: 10px;" src="./bootstrap/img/<?php echo $query_row['book_image']; ?>">
                         <p><strong><?php echo $query_row['book_title']; ?></strong></p>
                         <?php
                         foreach ($avtorji as $avtor) {
@@ -96,7 +102,7 @@ $totalPages = ceil($totalBooks / $booksPerPage);
     <div class="container">
         <ul class="pagination justify-content-center">
             <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                <li class="page-item <?php if ($i === $page) echo 'active'; ?>"><a class="page-link" href="?page=<?php echo $i . '&sort=' . $sortingOption; ?>"><?php echo $i; ?></a></li>
+                <li class="page-item <?php if ($i === $page) echo 'active'; ?>"><a class="page-link" href="?page=<?php echo $i . '&sort=' . $sortingOption . '&q=' . urlencode($searchQuery); ?>"><?php echo $i; ?></a></li>
             <?php endfor; ?>
         </ul>
     </div>

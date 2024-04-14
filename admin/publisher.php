@@ -1,5 +1,5 @@
 <?php
-$title = "Publisher Management";
+$title = "Upravljanje založnikov";
 require_once "../template/header.php";
 checkAdmin();
 $conn=dbConnectAdmin();
@@ -33,39 +33,50 @@ if (isset($_POST['delete_publisher'])) {
     }
 }
 
+// Function to get the count of books for each publisher
+function getPublisherBookCount($conn, $publisherId) {
+    $query = "SELECT COUNT(*) AS book_count FROM book WHERE publisher_id = '$publisherId'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    return $row['book_count'];
+}
+
 $result = getAllPublishers($conn);
 ?>
-<h2>Publisher Management</h2>
 
-<!-- <button type="button" onclick="window.location.href='admindash.php';" class="btn btn-default">Go to Dashboard</button> -->
+<h2>Upravljanje založnikov</h2>
 
-<!-- Form for adding a new publisher -->
+<!-- Obrazec za dodajanje novega založnika -->
 <form method="post" action="">
-    <label for="new_publisher_name">New Publisher Name:</label>
+    <label for="new_publisher_name">Ime novega založnika:</label>
     <input type="text" id="new_publisher_name" name="new_publisher_name" required>
-    <button type="submit" name="add_publisher" class="btn btn-success">Add Publisher</button>
+    <button type="submit" name="add_publisher" class="btn btn-success">Dodaj založnika</button>
 </form>
 
-<!-- Display the existing publishers in a table or other format -->
+<!-- Prikaz obstoječih založnikov v tabeli ali drugi obliki -->
 <table class="table" style="margin-top: 20px">
     <tr>
-        <th>Publisher ID</th>
-        <th>Publisher Name</th>
-        <th>Action</th>
+        <th>ID</th>
+        <th>Ime založnika</th>
+        <th>Število knjig</th>
+        <th></th>
     </tr>
     <?php
     while ($row = mysqli_fetch_assoc($result)) {
+        $publisherId = $row['publisher_id'];
+        $bookCount = getPublisherBookCount($conn, $publisherId);
     ?>
         <tr>
-            <td><?php echo $row['publisher_id']; ?></td>
-            <td><?php echo $row['publisher_name']; ?></td>
-            <td>
-                <!-- Edit Button -->
-                <a href="publisheredit.php?publisher_id=<?php echo $row['publisher_id']; ?>" class="btn btn-warning">Edit</a>
-                <!-- Delete Button -->
+            <td style="vertical-align: middle;"><?php echo $row['publisher_id']; ?></td>
+            <td style="vertical-align: middle;"><?php echo $row['publisher_name']; ?></td>
+            <td style="vertical-align: middle;"><?php echo $bookCount; ?></td>
+            <td style="vertical-align: middle;">
+                <!-- Gumb za urejanje -->
+                <a href="publisheredit.php?publisher_id=<?php echo $row['publisher_id']; ?>" class="btn btn-warning">Uredi</a>
+                <!-- Gumb za brisanje -->
                 <form method="post" action="" style="display: inline-block">
                     <input type="hidden" name="delete_publisher_id" value="<?php echo $row['publisher_id']; ?>">
-                    <button type="submit" name="delete_publisher" class="btn btn-danger">Delete</button>
+                    <button type="submit" name="delete_publisher" class="btn btn-danger">Izbriši</button>
                 </form>
             </td>
         </tr>

@@ -143,9 +143,9 @@ function insertUser($conn, $username, $password)
     return mysqli_insert_id($conn);
 }
 
-function updateUser($conn, $userid, $username, $userType)
+function updateUser($conn, $userid, $username, $email, $userType)
 {
-    $query = "UPDATE user SET username = '$username', user_type = '$userType' WHERE id = $userid";
+    $query = "UPDATE user SET username = '$username', email = '$email', user_type = '$userType' WHERE id = $userid";
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
@@ -554,4 +554,55 @@ function isLoggedIn()
     if (isset($_SESSION['user_id'])) {
         return true;
     }
+}
+function searchBooks($conn, $searchQuery, $booksPerPage, $offset) {
+    // Escape the search query to prevent SQL injection
+    $searchQuery = mysqli_real_escape_string($conn, $searchQuery);
+
+    // Construct the SQL query to search for books
+    $query = "SELECT b.*, GROUP_CONCAT(a.author_name SEPARATOR ', ') AS authors
+              FROM book b
+              LEFT JOIN book_author ba ON b.book_isbn = ba.book_isbn
+              LEFT JOIN author a ON ba.author_id = a.author_id
+              WHERE b.book_title LIKE '%$searchQuery%'
+              OR a.author_name LIKE '%$searchQuery%'
+              OR b.book_isbn LIKE '%$searchQuery%'
+              GROUP BY b.book_isbn";
+
+    // Execute the query
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        echo "Can't retrieve data: " . mysqli_error($conn);
+        exit;
+    }
+
+    return $result;
+}
+function countSearchBooks($conn, $searchQuery) {
+    // Escape the search query to prevent SQL injection
+    $searchQuery = mysqli_real_escape_string($conn, $searchQuery);
+
+    // Construct the SQL query to count the number of search results
+    $query = "SELECT COUNT(*) AS count
+              FROM (
+                  SELECT DISTINCT b.book_isbn
+                  FROM book b
+                  LEFT JOIN book_author ba ON b.book_isbn = ba.book_isbn
+                  LEFT JOIN author a ON ba.author_id = a.author_id
+                  WHERE b.book_title LIKE '%$searchQuery%'
+                  OR a.author_name LIKE '%$searchQuery%'
+                  OR b.book_isbn LIKE '%$searchQuery%'
+              ) AS search_results";
+
+    // Execute the query
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        echo "Can't retrieve data: " . mysqli_error($conn);
+        exit;
+    }
+
+    $row = mysqli_fetch_assoc($result);
+    return $row['count'];
 }

@@ -1,5 +1,5 @@
 <?php
-$title = "Author Management";
+$title = "Upravljanje Avtorjev";
 require_once "../template/header.php";
 $conn=dbConnectAdmin();
 checkAdmin();
@@ -14,9 +14,9 @@ if (isset($_POST['add_author'])) {
     $insertResult = mysqli_query($conn, $query);
 
     if (!$insertResult) {
-        echo "Error adding new author: " . mysqli_error($conn);
+        echo "Napaka pri dodajanju novega avtorja: " . mysqli_error($conn);
     } else {
-        echo "New author added successfully!";
+        echo "Nov avtor je bil uspešno dodan!";
     }
 }
 
@@ -30,54 +30,53 @@ if (isset($_POST['delete_author'])) {
     $bookCount = mysqli_fetch_assoc($checkResult)['book_count'];
 
     if ($bookCount > 0) {
-        echo "Error: This author cannot be deleted because they are linked to $bookCount book(s).";
+        echo "Napaka: Tega avtorja ni mogoče izbrisati, ker je povezan z $bookCount knjigami.";
     } else {
         // Delete the selected author from the database
         $deleteQuery = "DELETE FROM author WHERE author_id = '$deleteAuthorID'";
         $deleteResult = mysqli_query($conn, $deleteQuery);
 
         if (!$deleteResult) {
-            echo "Error deleting author: " . mysqli_error($conn);
+            echo "Napaka pri brisanju avtorja: " . mysqli_error($conn);
         }
     }
 }
-
 
 // Fetch all authors with associated book count from the database
 $authors = getAllAuthorsWithBookCount($conn);
 ?>
 
-<h2>Author Management</h2>
+<h2>Upravljanje Avtorjev</h2>
 
 <!-- Form for adding a new author -->
 <form method="post" action="">
-    <label for="new_author_name">New Author Name:</label>
+    <label for="new_author_name">Nov Avtor:</label>
     <input type="text" id="new_author_name" name="new_author_name" required>
-    <button type="submit" name="add_author" class="btn btn-success">Add Author</button>
+    <button type="submit" name="add_author" class="btn btn-success">Dodaj Avtorja</button>
 </form>
 
 <!-- Display the existing authors in a table -->
 <table class="table" style="margin-top: 20px">
     <tr>
-        <th>Author ID</th>
-        <th>Author Name</th>
-        <th>Book Count</th>
-        <th>Description</th>
-        <th>Action</th>
+        <th>ID</th>
+        <th>Ime avtorja</th>
+        <th>Število knjig</th>
+        <th>Opis</th>
+        <th></th>
     </tr>
     <?php foreach ($authors as $author) { ?>
         <tr>
-            <td><?php echo $author['author_id']; ?></td>
-            <td><?php echo $author['author_name']; ?></td>
-            <td><?php echo $author['book_count']; ?></td>
-            <td><?php echo empty($author['author_description']) ? 'EMPTY' : (countWords($author['author_description']) . " words"); ?></td>
-            <td>
-                <!-- Edit Button -->
-                <a href="authoredit.php?author_id=<?php echo $author['author_id']; ?>" class="btn btn-warning">Edit</a>
+            <td style="vertical-align: middle;"><?php echo $author['author_id']; ?></td>
+            <td style="vertical-align: middle;"><?php echo $author['author_name']; ?></td>
+            <td style="vertical-align: middle;"><?php echo $author['book_count']; ?></td>
+            <td style="vertical-align: middle;"><?php echo empty($author['author_description']) ? 'PRAZNO' : (countWords($author['author_description']) . " besed"); ?></td>
+            <td style="vertical-align: middle;">
+                <!-- Edit and delete Button -->
+                <a href="authoredit.php?author_id=<?php echo $author['author_id']; ?>" class="btn btn-warning">Uredi</a>
                 <!-- Delete Button -->
                 <form method="post" action="" style="display: inline-block">
                     <input type="hidden" name="delete_author_id" value="<?php echo $author['author_id']; ?>">
-                    <button type="submit" name="delete_author" class="btn btn-danger">Delete</button>
+                    <button type="submit" name="delete_author" class="btn btn-danger">Izbriši</button>
                 </form>
             </td>
         </tr>

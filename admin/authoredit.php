@@ -1,5 +1,5 @@
 <?php
-$title = "Edit Author";
+$title = "Uredi avtorja";
 require_once "../template/header.php";
 checkAdmin();
 $conn=dbConnectAdmin();
@@ -8,7 +8,7 @@ $conn=dbConnectAdmin();
 if (isset($_GET['author_id'])) {
     $author_id = $_GET['author_id'];
 } else {
-    echo "Empty author ID!";
+    echo "Prazno id avtorja!";
     exit;
 }
 
@@ -16,7 +16,7 @@ if (isset($_GET['author_id'])) {
 $query = "SELECT * FROM author WHERE author_id = '$author_id'";
 $result = mysqli_query($conn, $query);
 if (!$result) {
-    echo "Can't retrieve data " . mysqli_error($conn);
+    echo "Ne morem pridobiti podatkov " . mysqli_error($conn);
     exit;
 }
 
@@ -26,15 +26,14 @@ $row = mysqli_fetch_assoc($result);
 $bookQuery = "SELECT b.* FROM book b JOIN book_author ba ON b.book_isbn = ba.book_isbn WHERE ba.author_id = '$author_id'";
 $bookResult = mysqli_query($conn, $bookQuery);
 if (!$bookResult) {
-    echo "Can't retrieve books " . mysqli_error($conn);
+    echo "Ne morem pridobiti knjig " . mysqli_error($conn);
     exit;
 }
 ?>
-
-<h2>Author Management</h2>
+<h2><?php echo $row['author_name']; ?></h2>
 
 <!-- Display books by the author -->
-<h3>Books:</h3>
+<h3>Knjige:</h3>
 <?php if (mysqli_num_rows($bookResult) > 0) { ?>
     <ul>
         <?php while ($bookRow = mysqli_fetch_assoc($bookResult)) { ?>
@@ -42,29 +41,29 @@ if (!$bookResult) {
         <?php } ?>
     </ul>
 <?php } else { ?>
-    <p>No books found for this author.</p>
+    <p>Ni najdenih knjig za tega avtorja.</p>
 <?php } ?>
 
 <!-- Form to edit author details -->
 <form method="post" action="authoredit.php?author_id=<?php echo $author_id; ?>">
     <table class="table">
         <tr>
-            <th style="vertical-align: middle;">Author ID</th>
+            <th style="vertical-align: middle;">ID avtorja</th>
             <td><input type="text" name="author_id" value="<?php echo $row['author_id']; ?>" readOnly="true"></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Author Name</th>
+            <th style="vertical-align: middle;">Ime avtorja</th>
             <td><input type="text" name="author_name" value="<?php echo $row['author_name']; ?>" required></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Description</th>
+            <th style="vertical-align: middle;">Opis</th>
             <td><textarea id="author_description" name="author_description" cols="60" rows="5"><?php echo $row['author_description']; ?></textarea></td>
         </tr>
         <tr>
             <td colspan="2">
-                <input type="submit" name="save_change" value="Save changes" class="btn btn-success">
-                <input type="reset" value="Reset" class="btn btn-danger">
-                <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
+                <input type="submit" name="save_change" value="Shrani spremembe" class="btn btn-success">
+                <input type="reset" value="Ponastavi" class="btn btn-danger">
+                <button type="button" class="btn btn-default" onclick="goBack()">Nazaj</button>
             </td>
         </tr>
     </table>
