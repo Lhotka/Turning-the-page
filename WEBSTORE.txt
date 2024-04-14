@@ -42,3 +42,5 @@ Your order has been processed successfully.
     these two are missing
 
     git ignore .functions/database_functions because of admin connect ?
+
+    TRANSLATE PAGES AND CHECK IF USER EDITING WORKS
