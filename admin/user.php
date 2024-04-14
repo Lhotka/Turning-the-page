@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $newUsername = mysqli_real_escape_string($conn, $_POST['newUsername']);
                 $newUserType = mysqli_real_escape_string($conn, $_POST['newUserType']);
                 // Call function to update user in the database
-                updateUser($conn, $userid, $newUsername, $newUserType);
+                updateUser($conn, $userid, $newUsername, $newEmail, $newUserType);
                 break;
 
             case 'delete':
@@ -70,10 +70,10 @@ $users = getAllUsers($conn);
         <tbody>
             <?php foreach ($users as $user) : ?>
                 <tr>
-                    <td><?php echo $user['id']; ?></td>
-                    <td><?php echo $user['username']; ?></td>
-                    <td><?php echo $user['user_type']; ?></td>
-                    <td>
+                    <td style="vertical-align: middle;"><?php echo $user['id']; ?></td>
+                    <td style="vertical-align: middle;"><?php echo $user['username']; ?></td>
+                    <td style="vertical-align: middle;"><?php echo $user['user_type']; ?></td>
+                    <td style="vertical-align: middle;">
                         <!-- Edit Button -->
                         <a href="useredit.php?userid=<?php echo $user['id']; ?>" class="btn btn-warning">Edit</a>
 

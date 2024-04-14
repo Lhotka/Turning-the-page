@@ -22,7 +22,7 @@ error_reporting(E_ALL); // Disable error reporting on production - 0
 $_SESSION['err'] = 1;
 
 // Set session timeout
-$sessionTimeout = 600; // 10 minutes in seconds
+$sessionTimeout = 1800; // 30 minutes in seconds
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sessionTimeout)) {
     // Expire session if user is inactive for too long
     session_unset();     // unset $_SESSION variable for this page
@@ -62,7 +62,6 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
 </head>
 
 <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -83,6 +82,13 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
                         <li><a href="<?php echo $baseUrl; ?>/admin/admindash.php"><span class="glyphicon glyphicon-dashboard"></span>&nbsp; Admin Dashboard</a></li>
                     <?php endif; ?>
                 </ul>
+                <!-- Search bar -->
+                <form class="navbar-form navbar-left" action="<?php echo $baseUrl; ?>/books.php" method="get">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="q" placeholder="Search" value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
                 <!-- All other buttons -->
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="<?php echo $baseUrl; ?>/books.php"><span class="glyphicon glyphicon-book"></span>&nbsp; All Books</a></li>

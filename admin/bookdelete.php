@@ -1,6 +1,6 @@
 <?php
 $book_isbn = $_GET['bookisbn'];
-$title = "Book deletion";
+$title = "Odstranjevanje knjige";
 require "../template/header.php";
 checkAdmin();
 $conn=dbConnectAdmin();

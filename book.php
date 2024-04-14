@@ -30,8 +30,8 @@ require_once "./template/header.php";
 
 <p class="lead" style="margin: 25px 0"><a href="books.php">Vse knjige</a> > <?php echo $row['book_title']; ?></p>
 <div class="row">
-    <div class="col-md-3 text-center">
-        <img class="img-responsive img-thumbnail" src="./bootstrap/img/<?php echo $row['book_image']; ?>">
+    <div class="col-md-4 text-center">
+        <img style="width: 300px; height: auto;" class="img-responsive img-thumbnail" src="./bootstrap/img/<?php echo $row['book_image']; ?>">
     </div>
     <div class="col-md-6">
 
@@ -62,39 +62,25 @@ require_once "./template/header.php";
                 <td>Cena</td>
                 <td><?php echo $row['book_price'] . " €"; ?></td>
             </tr>
-
-            <tr>
-                <td>Na voljo</td>
-                <td>
-                    <?php
-                    $stock = $row['book_quantity'];
-                    if ($stock > 0) {
-                        echo "Na zalogi";
-                    } else {
-                        echo "Ni na zalogi";
-                    }
-                    ?>
-                </td>
-            </tr>
         </table>
         <?php
+        $stock = $row['book_quantity'];
 
-        // Check if the user is logged in
-        if (isLoggedIn() == true) {
-            // If logged in, call the addToCart function
-        ?>
-            <form method="post" action="cart.php">
+        if (isLoggedIn() && $row['book_quantity'] > 0) : ?>
+            <form method="post" action="cart.php" class="d-flex align-items-center">
                 <input type="hidden" name="bookisbn" value="<?php echo $book_isbn; ?>">
-                <input type="submit" value="Dodaj v košarico" name="cart" class="btn btn-primary">
+                <input type="submit" value="Dodaj v košarico" name="cart" class="btn btn-primary mr-2">
+                <p style="color:green;display: inline-block; margin: 10px;">Na zalogi</p>
             </form>
-        <?php ;
-        } else {
-        ?>
-
+        <?php elseif (!isLoggedIn()) : ?>
             <div class="alert alert-danger" role="alert" style="display: inline-block; margin-right: 10px;">Morate biti prijavljeni, da uporabljate košarico</div>
-
-        <?php ;
-        } ?>
+        <?php else : ?>
+            <form method="post" action="cart.php" class="d-flex align-items-center">
+                <input type="hidden" name="bookisbn" value="<?php echo $book_isbn; ?>">
+                <button type="button" class="btn btn-secondary mr-2" disabled>Dodaj v košarico</button>
+                <p style="color:red;display: inline-block; margin: 10px;">Ni na zalogi</p>
+            </form>
+        <?php endif; ?>
     </div>
 </div>
 <br />

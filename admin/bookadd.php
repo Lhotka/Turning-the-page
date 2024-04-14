@@ -175,7 +175,7 @@ if (isset($_POST['add'])) {
             <th style="vertical-align: middle;">Author</th>
             <td>
                 <select name="author" required>
-                    <option value="new_author" selected>ADD NEW AUTHOR</option>
+                    <option value="new_author" selected>DODAJ NOVI AVTOR</option>
                     <?php
                     // Fetch all authors from the database
                     $allAuthors = getAllAuthors($conn);
@@ -188,14 +188,14 @@ if (isset($_POST['add'])) {
                     }
                     ?>
                 </select>
-                <input type="text" name="new_author" placeholder="Enter author name">
+                <input type="text" name="new_author" placeholder="Vnesite ime avtorja">
             </td>
         </tr>
         <tr>
             <th style="vertical-align: middle;">Publisher</th>
             <td>
                 <select name="publisher" required>
-                    <option value="new_publisher" selected>ADD NEW PUBLISHER</option>
+                    <option value="new_publisher" selected>DODAJ NOVI ZALOŽNIK</option>
                     <?php
                     // Fetch all publishers from the database
                     $allPublishers = getAllPublishers($conn);
@@ -207,7 +207,7 @@ if (isset($_POST['add'])) {
                     }
                     ?>
                 </select>
-                <input type="text" name="new_publisher" placeholder="Enter publisher name">
+                <input type="text" name="new_publisher" placeholder="Vnesite ime založnika">
             </td>
         </tr>
         <tr>
@@ -224,9 +224,9 @@ if (isset($_POST['add'])) {
         </tr>
         <tr>
             <td colspan="2">
-                <input type="submit" name="add" value="Add book" class="btn btn-success">
-                <input type="reset" value="Reset" class="btn btn-danger">
-                <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
+                <input type="submit" name="add" value="Dodaj knjigo" class="btn btn-success">
+                <input type="reset" value="Ponastavi" class="btn btn-danger">
+                <button type="button" class="btn btn-default" onclick="goBack()">Nazaj</button>
             </td>
         </tr>
     </table>

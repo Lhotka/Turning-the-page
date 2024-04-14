@@ -1,5 +1,5 @@
 <?php
-$title = "Edit book";
+$title = "Urejanje knjige";
 require_once "../template/header.php";
 checkAdmin();
 $conn=dbConnectAdmin();
@@ -211,24 +211,24 @@ if (isset($_POST['save_change'])) {
             <td><input type="text" name="isbn" value="<?php echo $row['book_isbn']; ?>" readOnly="true"></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Title</th>
+            <th style="vertical-align: middle;">Naslov</th>
             <td><input type="text" name="title" value="<?php echo $row['book_title']; ?>" required></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Author</th>
+            <th style="vertical-align: middle;">Avtor</th>
             <td>
                 <select name="author" required>
-                    <option value="new_author" selected>ADD NEW AUTHOR</option>
+                    <option value="new_author" selected>DODAJ NOVEGA AVTORJA</option>
                     <?php
-                    // Fetch all authors from the database
+                    // Pridobi vse avtorje iz baze podatkov
                     $allAuthors = getAllAuthors($conn);
                     $originalAuthorId = $row['author_id'];
-                    // Loop through authors and populate the dropdown
+                    // Zanke skozi avtorje in napolnite spustni seznam
                     foreach ($allAuthors as $author) {
                         $authorId = $author['author_id'];
                         $authorName = $author['author_name'];
 
-                        // Check if the current author matches the original author
+                        // Preveri, ali trenutni avtor ustreza izvirnemu avtorju
                         if ($authorId == $originalAuthorId) {
                             echo "<option value='$authorId' selected>$authorName</option>";
                         } else {
@@ -237,23 +237,23 @@ if (isset($_POST['save_change'])) {
                     }
                     ?>
                 </select>
-                <input type="text" name="new_author" placeholder="Enter author name">
+                <input type="text" name="new_author" placeholder="Vnesite ime avtorja">
             </td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Publisher</th>
+            <th style="vertical-align: middle;">Založnik</th>
             <td>
                 <select name="publisher" required>
-                    <option value="new_publisher" selected>ADD NEW PUBLISHER</option>
+                    <option value="new_publisher" selected>DODAJ NOVEGA ZALOŽNIKA</option>
                     <?php
-                    // Fetch all publishers from the database
+                    // Pridobi vse založnike iz baze podatkov
                     $allPublishers = getAllPublishers($conn);
                     $originalPublisherName = getPubName($conn, $row['publisher_id']);
 
-                    // Loop through publishers and populate the dropdown
+                    // Zanke skozi založnike in napolnite spustni seznam
                     foreach ($allPublishers as $publisher) {
                         $publisherName = $publisher['publisher_name'];
-                        // Check if the current publisher matches the original publisher
+                        // Preveri, ali trenutni založnik ustreza izvirnemu založniku
                         if ($publisherName == $originalPublisherName) {
                             echo "<option value='$publisherName' selected>$publisherName</option>";
                         } else {
@@ -262,21 +262,21 @@ if (isset($_POST['save_change'])) {
                     }
                     ?>
                 </select>
-                <input type="text" name="new_publisher" placeholder="Enter publisher name">
+                <input type="text" name="new_publisher" placeholder="Vnesite ime založnika">
             </td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Publication Date</th>
+            <th style="vertical-align: middle;">Datum izdaje</th>
             <td><input type="date" name="pub_date" value="<?php echo $row['book_pub_date_formatted']; ?>" required></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Image</th>
+            <th style="vertical-align: middle;">Slika</th>
             <td style="display: flex; align-items: center;">
                 <?php
                 $existingImage = $row['book_image'];
                 if (!empty($existingImage)) {
                     $imagePath = 'bootstrap/img/' . $existingImage;
-                    echo '<img src="../' . $imagePath . '" alt="Existing Image" style="max-width: 100px; max-height: 100px; margin-right: 10px;">';
+                    echo '<img src="../' . $imagePath . '" alt="Obstoječa slika" style="max-width: 100px; max-height: 100px; margin-right: 10px;">';
                     echo '<span>' . $existingImage . '</span>&nbsp&nbsp';
                 }
                 ?>
@@ -284,22 +284,22 @@ if (isset($_POST['save_change'])) {
             </td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Description</th>
+            <th style="vertical-align: middle;">Opis</th>
             <td><textarea id="descriptionTextarea" name="descr" cols="60" rows="5"><?php echo $row['book_descr']; ?></textarea></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Price</th>
+            <th style="vertical-align: middle;">Cena</th>
             <td><input type="text" name="price" value="<?php echo $row['book_price']; ?>" required></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Quantity</th>
+            <th style="vertical-align: middle;">Zaloga</th>
             <td><input type="number" name="quantity" value="<?php echo $row['book_quantity']; ?>" required></td>
         </tr>
         <tr>
             <td colspan="2">
-                <input type="submit" name="save_change" value="Save changes" class="btn btn-success">
-                <input type="reset" value="Reset" class="btn btn-danger">
-                <a href="book.php" class="btn btn-default">Go back</a>
+                <input type="submit" name="save_change" value="Shrani spremembe" class="btn btn-success">
+                <input type="reset" value="Ponastavi" class="btn btn-danger">
+                <a href="book.php" class="btn btn-default">Nazaj</a>
             </td>
         </tr>
     </table>
