@@ -40,5 +40,3 @@ Your order has been processed successfully.
     Please check your email to get your order confirmation and shipping details!
      Your cart is now empty !! also so the user cant just reload the order processing page
     these two are missing
-
-    git ignore .functions/database_functions because of admin connect ?
