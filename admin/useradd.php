@@ -1,6 +1,6 @@
 <?php
-$title = "Add New User";
-require_once "../template/header.php";
+$title = "Dodaj uporabnika";
+require_once "../header.php";
 checkAdmin();
 $conn = dbConnectAdmin();
 
@@ -14,18 +14,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validate input
     if (empty($username)) {
-        $errors[] = "Username is required.";
+        $errors[] = "Uporabniško ime je obvezno.";
     }
     if (empty($password)) {
-        $errors[] = "Password is required.";
+        $errors[] = "Geslo je obvezno.";
     }
     if (empty($email)) {
-        $errors[] = "Email is required.";
+        $errors[] = "E-pošta je obvezna.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid email format.";
+        $errors[] = "Neveljaven format e-pošte.";
     }
     if (empty($userType)) {
-        $errors[] = "User type is required.";
+        $errors[] = "Vrsta uporabnika je obvezna.";
     }
 
     if (empty($errors)) {
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $checkQuery = "SELECT * FROM user WHERE email = '$email'";
         $checkResult = mysqli_query($conn, $checkQuery);
         if (mysqli_num_rows($checkResult) > 0) {
-            $errors[] = "Email already exists. Please choose a different email.";
+            $errors[] = "E-pošta že obstaja. Prosimo, izberite drugo e-pošto.";
         } else {
             // Hash the password before storing it in the database
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -44,11 +44,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($insertResult) {
                 // User addition successful
-                echo "User added successfully!";
+                echo "Uporabnik uspešno dodan!";
                 header("Location: user.php");
                 exit;
             } else {
-                echo "Error adding user: " . mysqli_error($conn);
+                echo "Napaka pri dodajanju uporabnika: " . mysqli_error($conn);
             }
         }
     }
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <div class="container">
-    <h2>Add New User</h2>
+    <h2>Dodaj uporabnika</h2>
 
     <?php if (!empty($errors)) : ?>
         <div class="alert alert-danger" role="alert">
@@ -70,31 +70,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <div class="form-group">
-            <label for="username">Username:</label>
+            <label for="username">Uporabniško ime:</label>
             <input type="text" name="username" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="email">Email:</label>
+            <label for="email">E-pošta:</label>
             <input type="email" name="email" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="password">Password:</label>
+            <label for="password">Geslo:</label>
             <input type="password" name="password" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="user_type">User Type:</label>
+            <label for="user_type">Vrsta uporabnika:</label>
             <select name="user_type" class="form-control" required>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
+                <option value="user">Uporabnik</option>
+                <option value="admin">Administrator</option>
             </select>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-success">Add User</button>
+            <button type="submit" class="btn btn-success">Dodaj uporabnika</button>
             <a href="user.php" class="btn btn-default">Nazaj</a>
         </div>
     </form>
 </div>
 
 <?php
-require_once "../template/footer.php";
+require_once "../footer.php";
 ?>

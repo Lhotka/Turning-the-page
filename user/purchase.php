@@ -1,7 +1,7 @@
 <?php
 $title = "Nakup";
-require_once "./template/header.php";
-require_once "./functions/cart_functions.php";
+require_once "../header.php";
+require_once "../functions/cart_functions.php";
 
 // Check if the user is logged in
 checkLoggedIn();
@@ -31,7 +31,7 @@ foreach ($_POST as $key => $value) {
 }
 
 if (isset($_SESSION['cart']) && (array_count_values($_SESSION['cart']))) {
-    require_once 'template/cartnoedit.php';
+    require_once './cartlayoutnoedit.php';
 ?>
     <script src="https://kit.fontawesome.com/14c1c695aa.js" crossorigin="anonymous"></script>
 
@@ -141,5 +141,5 @@ if (isset($_SESSION['cart']) && (array_count_values($_SESSION['cart']))) {
 } else {
     echo "<p class=\"text-warning\">Vaša košarica je prazna!</p>";
 }
-require_once "./template/footer.php";
+require_once "../footer.php";
 ?>

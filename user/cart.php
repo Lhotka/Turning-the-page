@@ -1,12 +1,12 @@
 <?php
 $title = "Košarica";
-require "./template/header.php";
-require_once "./functions/cart_functions.php";
+require "../header.php";
+require_once "../functions/cart_functions.php";
 
 // Check if the user is logged in
 checkLoggedIn();
 
-$conn=dbConnect();
+$conn = dbConnect();
 
 // Pridobi ISBN knjige iz metode POST obrazca
 if (isset($_POST['bookisbn'])) {
@@ -48,8 +48,8 @@ if (isset($_SESSION['cart']) && (array_count_values($_SESSION['cart']))) {
     $_SESSION['total_price'] = total_price($conn, $_SESSION['cart']);
     $_SESSION['total_items'] = total_items($_SESSION['cart']);
 
-    require_once 'template/cart.php';
+    require_once './cartlayout.php';
 } else {
     echo "<p class=\"text-warning\">Vaša košarica je prazna!</p>";
 }
-require_once "./template/footer.php";
+require_once "../footer.php";

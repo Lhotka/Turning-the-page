@@ -1,8 +1,28 @@
 <?php
 $title = "Uredi avtorja";
-require_once "../template/header.php";
+require_once "../header.php";
 checkAdmin();
-$conn=dbConnectAdmin();
+$conn = dbConnectAdmin();
+
+// Check if the form is submitted for saving changes
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_change'])) {
+    // Get the author ID
+    $author_id = $_GET['author_id'];
+
+    // Get the updated author details from the form
+    $author_name = $_POST['author_name'];
+    $author_description = $_POST['author_description'];
+
+    // Update the author details in the database
+    $update_query = "UPDATE author SET author_name = '$author_name', author_description = '$author_description' WHERE author_id = '$author_id'";
+    $update_result = mysqli_query($conn, $update_query);
+
+    if (!$update_result) {
+        echo "Napaka pri shranjevanju sprememb: " . mysqli_error($conn);
+    } else {
+        echo "Spremembe so bile uspešno shranjene!";
+    }
+}
 
 // Get the author ID
 if (isset($_GET['author_id'])) {
@@ -63,17 +83,11 @@ if (!$bookResult) {
             <td colspan="2">
                 <input type="submit" name="save_change" value="Shrani spremembe" class="btn btn-success">
                 <input type="reset" value="Ponastavi" class="btn btn-danger">
-                <button type="button" class="btn btn-default" onclick="goBack()">Nazaj</button>
+                <a href="author.php" type="button" class="btn btn-default">Nazaj</a>
             </td>
         </tr>
     </table>
 </form>
-<script>
-    // Function to go back to the previous page
-    function goBack() {
-        window.history.back();
-    }
-</script>
 <script>
     // Function to auto-resize textarea and adjust input sizes
     function autoResizeInputs() {
@@ -107,5 +121,5 @@ if (!$bookResult) {
 </script>
 
 <?php
-require_once "../template/footer.php";
+require_once "../footer.php";
 ?>

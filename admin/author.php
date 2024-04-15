@@ -1,7 +1,7 @@
 <?php
 $title = "Upravljanje Avtorjev";
-require_once "../template/header.php";
-$conn=dbConnectAdmin();
+require_once "../header.php";
+$conn = dbConnectAdmin();
 checkAdmin();
 
 // Handle form submission for adding a new author
@@ -12,12 +12,6 @@ if (isset($_POST['add_author'])) {
     // Insert the new author into the database
     $query = "INSERT INTO author (author_name) VALUES ('$newAuthorName')";
     $insertResult = mysqli_query($conn, $query);
-
-    if (!$insertResult) {
-        echo "Napaka pri dodajanju novega avtorja: " . mysqli_error($conn);
-    } else {
-        echo "Nov avtor je bil uspešno dodan!";
-    }
 }
 
 // Handle form submission for deleting an author
@@ -53,7 +47,18 @@ $authors = getAllAuthorsWithBookCount($conn);
     <label for="new_author_name">Nov Avtor:</label>
     <input type="text" id="new_author_name" name="new_author_name" required>
     <button type="submit" name="add_author" class="btn btn-success">Dodaj Avtorja</button>
+    <?php
+    if (isset($_POST['add_author'])) {
+        // Check if the author was successfully added
+        if (isset($insertResult) && $insertResult) {
+            echo "<p class='text-success'>Nov avtor je bil uspešno dodan!</p>";
+        } else {
+            echo "<p class='text-danger'>Napaka pri dodajanju novega avtorja: " . mysqli_error($conn) . "</p>";
+        }
+    }
+    ?>
 </form>
+
 
 <!-- Display the existing authors in a table -->
 <table class="table" style="margin-top: 20px">
@@ -74,7 +79,7 @@ $authors = getAllAuthorsWithBookCount($conn);
                 <!-- Edit and delete Button -->
                 <a href="authoredit.php?author_id=<?php echo $author['author_id']; ?>" class="btn btn-warning">Uredi</a>
                 <!-- Delete Button -->
-                <form method="post" action="" style="display: inline-block">
+                <form method="post" action="" style="display: inline-block" onsubmit="return confirm('Ste prepričani, da želite izbrisati tega avtorja? Tega dejanja ni mogoče razveljaviti.');">
                     <input type="hidden" name="delete_author_id" value="<?php echo $author['author_id']; ?>">
                     <button type="submit" name="delete_author" class="btn btn-danger">Izbriši</button>
                 </form>
@@ -83,4 +88,4 @@ $authors = getAllAuthorsWithBookCount($conn);
     <?php } ?>
 </table>
 
-<?php require_once "../template/footer.php"; ?>
+<?php require_once "../footer.php"; ?>

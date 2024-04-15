@@ -1,9 +1,9 @@
 <?php
 $book_isbn = $_GET['bookisbn'];
 $title = "Odstranjevanje knjige";
-require "../template/header.php";
+require "../header.php";
 checkAdmin();
-$conn=dbConnectAdmin();
+$conn = dbConnectAdmin();
 
 // Delete related rows in book_author first
 $deleteBookAuthorQuery = "DELETE FROM book_author WHERE book_isbn = '$book_isbn'";
@@ -26,4 +26,4 @@ if (!$deleteBookResult) {
 header("Location: book.php");
 
 
-require_once "../template/footer.php";
+require_once "../footer.php";

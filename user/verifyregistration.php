@@ -1,8 +1,8 @@
 <?php
-$title = "Registration verification";
-require_once "./template/header.php";
+$title = "Preverjanje registracije";
+require_once "../header.php";
 
-$conn=dbConnect();
+$conn = dbConnect();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
     // Retrieve user input
@@ -22,17 +22,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
             $userID = mysqli_insert_id($conn);
 
             session_start();
-            
+
             // Set session variables to indicate user is logged in
             $_SESSION['user_email'] = $newEmail;
             $_SESSION['user_id'] = $userID;
             header("Location: userdash.php"); // Redirect to the user page
             exit();
         } else {
-            echo "Registration failed. Please try again.";
+            echo "Registracija ni uspela. Poskusite znova.";
         }
     } else {
-        echo "Email already exists. Please choose a different email.";
+        echo "E-pošta že obstaja. Prosimo, izberite drug e-poštni naslov.";
     }
 } else {
     // Redirect to the registration page if accessed without proper form submission
@@ -40,4 +40,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
     exit();
 }
 
-require_once "./template/footer.php";
+require_once "../footer.php";

@@ -8,7 +8,6 @@
 
       	<!-- /container -->
 
-
       	<!-- Dynamic Bootstrap core JavaScript -->
       	<script type="text/javascript" src="<?php echo $baseUrl; ?>/bootstrap/js/jquery-2.1.4.min.js"></script>
       	<script type="text/javascript" src="<?php echo $baseUrl; ?>/bootstrap/js/bootstrap.min.js"></script>

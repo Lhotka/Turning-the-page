@@ -1,8 +1,8 @@
 <?php
 $title = "Urejanje knjige";
-require_once "../template/header.php";
+require_once "../header.php";
 checkAdmin();
-$conn=dbConnectAdmin();
+$conn = dbConnectAdmin();
 
 //Get the ISBN
 if (isset($_GET['bookisbn'])) {
@@ -357,5 +357,5 @@ if (isset($_POST['save_change'])) {
 </script>
 
 <?php
-require "../template/footer.php";
+require "../footer.php";
 ?>

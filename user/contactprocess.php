@@ -1,7 +1,7 @@
 <?php
-$title = "Process Contact";
-require_once "./template/header.php";
-require 'vendor/autoload.php';
+$title = "Procesiranje kontaktnega obrazca";
+require_once "../header.php";
+require '../vendor/autoload.php';
 //require_once __DIR__ . '/vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -12,10 +12,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
     $userEmail = $_POST["inputEmail"];
     $messageText = $_POST["textArea"];
 
-    $subject = "New Contact Form Submission";
-    $messageBody = "Email: $userEmail\nMessage: $messageText";
+    $subject = "Nova vloga preko kontaktnega obrazca";
+    $messageBody = "E-pošta: $userEmail\nSporočilo: $messageText";
 
-    // Verify inputs
+    // Preveri vnose
     if (empty($userEmail) || empty($messageText)) {
         header("Location: " . $_SERVER['HTTP_REFERER'] . "?error=empty_fields");
         exit();
@@ -24,23 +24,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
     $dotenvFilePath = 'C:\xampp\htdocs\FINAL\.env';
 
     if (!file_exists($dotenvFilePath) || !is_readable($dotenvFilePath)) {
-        die('Error: Unable to read the .env file.');
+        die('Napaka: Ni mogoče prebrati datoteke .env.');
     }
 
-    $dotenvFilePath = 'C:\xampp\htdocs\FINAL'; // Point directly to the directory, not the file
+    $dotenvFilePath = 'C:\xampp\htdocs\FINAL'; // Usmeri neposredno v mapo, ne v datoteko
 
     try {
         $dotenv = Dotenv\Dotenv::createImmutable($dotenvFilePath);
         $dotenv->load();
     } catch (\Dotenv\Exception\InvalidPathException $e) {
-        die('Error: Unable to load the .env file. ' . $e->getMessage());
+        die('Napaka: Ni mogoče naložiti datoteke .env. ' . $e->getMessage());
     }
 
     $mail = new PHPMailer(true);
 
-    // Server settings
+    // Nastavitve strežnika
     try {
-        $mail->SMTPDebug = 2;
+        $mail->SMTPDebug = 0; //2 za razhroščevanje
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = $_ENV['GMAIL_USERNAME'];
@@ -48,35 +48,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
-        // Recipients
+        // Prejemniki
         $mail->setFrom($userEmail, $userEmail);
-        $mail->addAddress('filip.lhotka@gmail.com'); // Admin/recipient email address
+        $mail->addAddress('filip.lhotka@gmail.com'); // E-poštni naslov skrbnika/prejemnika
 
-        // Content
+        // Vsebina
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $messageBody;
 
-        // Send email
+        // Pošlji e-pošto
         $mail->send();
 
-        // Set success message and redirect
-        $_SESSION['success_message'] = 'Email sent successfully';
+        // Nastavi sporočilo o uspehu in preusmeri
+        $_SESSION['success_message'] = 'E-pošta uspešno poslana';
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     } catch (Exception $e) {
-        // Log the error message for debugging
+        // Zabeleži sporočilo o napaki za razhroščevanje
         $errorLog = fopen('error_log.txt', 'a');
-        fwrite($errorLog, date('Y-m-d H:i:s') . ' Error: ' . $e->getMessage() . PHP_EOL);
+        fwrite($errorLog, date('Y-m-d H:i:s') . ' Napaka: ' . $e->getMessage() . PHP_EOL);
         fclose($errorLog);
 
-        // Set error message
-        $_SESSION['error_message'] = 'Failed to send email';
+        // Nastavi sporočilo o napaki
+        $_SESSION['error_message'] = 'Pošiljanje e-pošte ni uspelo';
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     }
 } else {
-    // If the form is not submitted via POST or keys are not set, redirect to the contact page
+    // Če obrazec ni poslan preko POST ali če ključi niso nastavljeni, preusmeri na stran za stik
     header("Location: contact.php");
     exit();
 }
+?>

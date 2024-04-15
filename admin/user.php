@@ -1,8 +1,8 @@
 <?php
-$title = "User Management";
-require_once "../template/header.php";
+$title = "Upravljanje uporabnikov";
+require_once "../header.php";
 checkAdmin();
-$conn=dbConnectAdmin();
+$conn = dbConnectAdmin();
 
 // Check if form submitted for user actions (add, edit, delete)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -51,20 +51,20 @@ $users = getAllUsers($conn);
 ?>
 
 <div class="container">
-    <h2>User Management</h2>
+    <h2>Upravljanje uporabnikov</h2>
 
-    <!-- Add User -->
-    <p class="lead"><a href="useradd.php">Add New User</a></p>
+    <!-- Dodaj uporabnika -->
+    <p class="lead"><a href="useradd.php">Dodaj novega uporabnika</a></p>
 
 
-    <!-- List of Users -->
+    <!-- Seznam uporabnikov -->
     <table class="table">
         <thead>
             <tr>
-                <th>User ID</th>
-                <th>Username</th>
-                <th>User type</th>
-                <th>Action</th>
+                <th>ID</th>
+                <th>Uporabniško ime</th>
+                <th>Tip uporabnika</th>
+                <th>Akcija</th>
             </tr>
         </thead>
         <tbody>
@@ -74,14 +74,14 @@ $users = getAllUsers($conn);
                     <td style="vertical-align: middle;"><?php echo $user['username']; ?></td>
                     <td style="vertical-align: middle;"><?php echo $user['user_type']; ?></td>
                     <td style="vertical-align: middle;">
-                        <!-- Edit Button -->
-                        <a href="useredit.php?userid=<?php echo $user['id']; ?>" class="btn btn-warning">Edit</a>
+                        <!-- Gumb za urejanje -->
+                        <a href="useredit.php?userid=<?php echo $user['id']; ?>" class="btn btn-warning">Uredi</a>
 
-                        <!-- Delete Button -->
+                        <!-- Gumb za brisanje -->
                         <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="display: inline-block">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="userid" value="<?php echo $user['id']; ?>">
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger">Izbriši</button>
                         </form>
                     </td>
                 </tr>
@@ -91,5 +91,5 @@ $users = getAllUsers($conn);
 </div>
 
 <?php
-require_once "../template/footer.php";
+require_once "../footer.php";
 ?>

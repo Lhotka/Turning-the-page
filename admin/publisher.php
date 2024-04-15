@@ -1,8 +1,8 @@
 <?php
 $title = "Upravljanje založnikov";
-require_once "../template/header.php";
+require_once "../header.php";
 checkAdmin();
-$conn=dbConnectAdmin();
+$conn = dbConnectAdmin();
 
 // Handle form submission for adding a new publisher
 if (isset($_POST['add_publisher'])) {
@@ -14,9 +14,9 @@ if (isset($_POST['add_publisher'])) {
     $insertResult = mysqli_query($conn, $query);
 
     if (!$insertResult) {
-        echo "Error adding new publisher: " . mysqli_error($conn);
+        echo "Napaka pri dodajanju novega založnika: " . mysqli_error($conn);
     } else {
-        echo "New publisher added successfully!";
+        echo "Nov založnik uspešno dodan!";
     }
 }
 
@@ -29,12 +29,13 @@ if (isset($_POST['delete_publisher'])) {
     $deleteResult = mysqli_query($conn, $deleteQuery);
 
     if (!$deleteResult) {
-        echo "Error deleting publisher: " . mysqli_error($conn);
+        echo "Napaka pri brisanju založnika: " . mysqli_error($conn);
     }
 }
 
 // Function to get the count of books for each publisher
-function getPublisherBookCount($conn, $publisherId) {
+function getPublisherBookCount($conn, $publisherId)
+{
     $query = "SELECT COUNT(*) AS book_count FROM book WHERE publisher_id = '$publisherId'";
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
@@ -84,5 +85,5 @@ $result = getAllPublishers($conn);
 </table>
 
 <?php
-require_once "../template/footer.php";
+require_once "../footer.php";
 ?>

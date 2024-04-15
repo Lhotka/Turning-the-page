@@ -1,6 +1,6 @@
 <?php
 $title = "Nadzorna plošča";
-require_once "../template/header.php";
+require_once "../header.php";
 checkAdmin();
 ?>
 
@@ -15,9 +15,10 @@ checkAdmin();
     </div>
     <div style="margin: 10px;">
         <a href="order.php" class="btn btn-success btn-lg" style="margin: 10px; width: 200px; text-align: center;">Naročila</a>
+        <a href="orderold.php" class="btn btn-primary btn-lg" style="margin: 10px; width: 200px; text-align: center;">Pretekla naročila</a>
     </div>
 </div>
 
 <?php
-require_once "../template/footer.php";
+require_once "../footer.php";
 ?>

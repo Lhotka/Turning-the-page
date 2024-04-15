@@ -3,7 +3,7 @@ function dbConnect()
 {
     $conn = mysqli_connect("localhost", "user", "", "final");
     if (!$conn) {
-        die("Can't connect to the database.");
+        die("Ne morem se povezati z bazo podatkov.");
     }
     return $conn;
 }
@@ -11,23 +11,23 @@ function dbConnectAdmin()
 {
     $conn = mysqli_connect("localhost", "admin", "U15weXS#KySu2gVePtL%", "final");
     if (!$conn) {
-        die("Can't connect to the database.");
+        die("Ne morem se povezati z bazo podatkov.");
     }
     return $conn;
 }
 function checkAndResizeImage($sourcePath, $targetWidth)
-// Check and resize image if needed, also check that it's less than 5MB
+// Preveri in prilagodi sliko po potrebi, preveri tudi, ali je manjša od 5 MB
 {
-    // Fix the maximum file size to 5MB
-    $maxFileSizeBytes = 5 * 1024 * 1024; // 5MB in bytes
+    // Določite največjo velikost datoteke na 5 MB
+    $maxFileSizeBytes = 5 * 1024 * 1024; // 5 MB v bajtih
 
-    // Check file size
+    // Preveri velikost datoteke
     if (filesize($sourcePath) > $maxFileSizeBytes) {
-        echo "File size exceeds the allowed size limit.";
+        echo "Velikost datoteke presega dovoljeno omejitev velikosti.";
         return;
     }
 
-    //Image width
+    //Širina slike
     list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($sourcePath);
 
     if ($sourceWidth > $targetWidth) {
@@ -35,6 +35,7 @@ function checkAndResizeImage($sourcePath, $targetWidth)
 
         switch ($sourceType) {
             case IMAGETYPE_JPEG:
+                echo '<br/>' . $sourcePath;
                 $sourceImage = imagecreatefromjpeg($sourcePath);
                 break;
             case IMAGETYPE_PNG:
@@ -44,7 +45,7 @@ function checkAndResizeImage($sourcePath, $targetWidth)
                 $sourceImage = imagecreatefromgif($sourcePath);
                 break;
             default:
-                // Unsupported image type
+                // Nepodprt tip slike
                 return;
         }
 
@@ -94,35 +95,49 @@ function getUser($conn, $email, $password)
 
 function getUserData($conn, $userid)
 {
+    // Poizvedba za pridobitev podatkov uporabnika glede na uporabniški ID
     $query = "SELECT username, email, user_type FROM user WHERE id = $userid";
 
+    // Izvedba poizvedbe
     $result = mysqli_query($conn, $query);
 
+    // Preveri, ali je izvedba poizvedbe uspešna
     if (!$result) {
-        echo "Error: " . mysqli_error($conn);
+        // Če poizvedba ne uspe, prikaži sporočilo o napaki
+        echo "Napaka: " . mysqli_error($conn);
         exit;
     }
 
+    // Preveri, ali so podatki uporabnika najdeni
     if ($result && mysqli_num_rows($result) > 0) {
-        // Fetch associative array
+        // Pridobi asociativni niz, ki vsebuje podatke uporabnika
         $user = mysqli_fetch_assoc($result);
         return $user;
     } else {
-        return null; // User not found
+        // Vrne nič, če uporabnik ni najden
+        return null;
     }
 }
 
 function getAllUsers($conn)
 {
+    // Poizvedba za pridobitev vseh uporabnikov
     $query = "SELECT * FROM user";
+
+    // Izvedba poizvedbe
     $result = mysqli_query($conn, $query);
 
+    // Preveri, ali je izvedba poizvedbe uspešna
     if (!$result) {
-        echo "Can't retrieve data: " . mysqli_error($conn);
+        // Če poizvedba ne uspe, prikaži sporočilo o napaki
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
 
+    // Inicializirajte matriko za shranjevanje podatkov uporabnikov
     $users = array();
+
+    // Zanke skozi rezultat poizvedbe in pridobi podatke uporabnika
     while ($row = mysqli_fetch_assoc($result)) {
         $users[] = $row;
     }
@@ -136,7 +151,7 @@ function insertUser($conn, $username, $password)
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Error adding user: " . mysqli_error($conn);
+        echo "Napaka pri dodajanju uporabnika: " . mysqli_error($conn);
         exit;
     }
 
@@ -149,7 +164,7 @@ function updateUser($conn, $userid, $username, $email, $userType)
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Error updating user: " . mysqli_error($conn);
+        echo "Napaka pri posodabljanju uporabnika: " . mysqli_error($conn);
         exit;
     }
 }
@@ -160,7 +175,7 @@ function deleteUser($conn, $userid)
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Error deleting user: " . mysqli_error($conn);
+        echo "Napaka pri odstranjevanju uporabnika: " . mysqli_error($conn);
         exit;
     }
 }
@@ -172,7 +187,7 @@ function setUserId($conn, $name, $address, $city, $zip_code, $country)
 
     $result = mysqli_query($conn, $query);
     if (!$result) {
-        echo "Insert user failed: " . mysqli_error($conn);
+        echo "Napaka pri vstavljanju uporabnika: " . mysqli_error($conn);
         exit;
     }
 
@@ -186,7 +201,7 @@ function selectLatestBooks($conn)
     $query = "SELECT book_isbn, book_image FROM book ORDER BY date_added DESC LIMIT 4";
     $result = mysqli_query($conn, $query);
     if (!$result) {
-        echo "Can't retrieve data " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
     for ($i = 0; $i < 4; $i++) {
@@ -204,7 +219,7 @@ function getAuthorsByISBN($conn, $isbn)
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Can't retrieve data " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
 
@@ -221,35 +236,12 @@ function getOrderId($conn, $id)
     $query = "SELECT orderid FROM orders WHERE customerid = '$id'";
     $result = mysqli_query($conn, $query);
     if (!$result) {
-        echo "retrieve data failed!" . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
     $row = mysqli_fetch_assoc($result);
     return $row['orderid'];
 }
-/*
-    function insertIntoOrder($conn, $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country)
-    {
-        // Modify the query to include the correct column names and placeholders for values
-        $query = "INSERT INTO orders (customerid, amount, date, ship_name, ship_address, ship_city, ship_zip_code, ship_country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        // Prepare the query
-        $stmt = mysqli_prepare($conn, $query);
-    
-        // Bind parameters to the prepared statement
-        mysqli_stmt_bind_param($stmt, "idsssss", $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country);
-        
-        // Execute the statement
-        $result = mysqli_stmt_execute($stmt);
-    
-        if (!$result) {
-            echo "Insert orders failed " . mysqli_error($conn);
-            exit;
-        }
-    }
-    */
-
-//insertIntoOrder with debugging and trimming
 function insertIntoOrder($conn, $id, $total_price, $date, $ship_name, $ship_address, $ship_city, $ship_zip_code, $ship_country)
 {
     // Trim input data to remove leading and trailing spaces
@@ -281,11 +273,11 @@ function getPubName($conn, $pubid)
     $query = "SELECT publisher_name FROM publisher WHERE publisher_id = '$pubid'";
     $result = mysqli_query($conn, $query);
     if (!$result) {
-        echo "Can't retrieve data " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
     if (mysqli_num_rows($result) == 0) {
-        echo "Something is wrong!";
+        echo "Nekaj je narobe!";
         exit;
     }
 
@@ -299,7 +291,7 @@ function getAllPublishers($conn)
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Can't retrieve data: " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
 
@@ -355,7 +347,7 @@ function getAllBooks($conn, $sortingOption = 'latest', $limit = null, $offset = 
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Can't retrieve data " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
 
@@ -393,7 +385,7 @@ function getAllBooksAdmin($conn, $sortingOption = 'latest', $limit = null, $offs
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Can't retrieve data " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
 
@@ -405,7 +397,7 @@ function getBookCount($conn)
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Can't retrieve data: " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
 
@@ -421,7 +413,7 @@ function getBookPrice($conn, $isbn)
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     if (!$result) {
-        echo "get book price failed! " . mysqli_error($conn);
+        echo "Napaka: " . mysqli_error($conn);
         exit;
     }
     $row = mysqli_fetch_assoc($result);
@@ -434,13 +426,11 @@ function isEmailExists($conn, $email)
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Error checking email existence: " . mysqli_error($conn);
+        echo "Napaka pri preverjanju obstoječnosti e-naslova: " . mysqli_error($conn);
         return false;
     }
 
     $count = mysqli_num_rows($result);
-    mysqli_close($conn);
-
     return $count > 0;
 }
 
@@ -449,14 +439,17 @@ function addUser($conn, $email, $username, $password)
     // Hash the password before storing it in the database
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
+    // Escape user input to prevent SQL injection
     $email = mysqli_real_escape_string($conn, $email);
     $username = mysqli_real_escape_string($conn, $username);
 
+    // Perform the database query
     $query = "INSERT INTO user (email, username, password) VALUES ('$email', '$username', '$hashedPassword')";
     $result = mysqli_query($conn, $query);
 
+    // Check if the query was successful
     if (!$result) {
-        echo "Error adding user: " . mysqli_error($conn);
+        echo "Napaka pri dodajanju uporabnika: " . mysqli_error($conn);
         return false;
     }
 
@@ -477,7 +470,7 @@ function getBookByIsbn($conn, $isbn)
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Error getting book details: " . mysqli_error($conn);
+        echo "Napaka pri pridobivanju podatkov knjige: " . mysqli_error($conn);
         exit;
     }
 
@@ -491,7 +484,7 @@ function getAllAuthors($conn)
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Can't retrieve data: " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
 
@@ -512,7 +505,7 @@ function getAllAuthorsWithBookCount($conn)
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Can't retrieve data: " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
 
@@ -555,7 +548,8 @@ function isLoggedIn()
         return true;
     }
 }
-function searchBooks($conn, $searchQuery, $booksPerPage, $offset) {
+function searchBooks($conn, $searchQuery, $booksPerPage, $offset)
+{
     // Escape the search query to prevent SQL injection
     $searchQuery = mysqli_real_escape_string($conn, $searchQuery);
 
@@ -573,13 +567,14 @@ function searchBooks($conn, $searchQuery, $booksPerPage, $offset) {
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Can't retrieve data: " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
 
     return $result;
 }
-function countSearchBooks($conn, $searchQuery) {
+function countSearchBooks($conn, $searchQuery)
+{
     // Escape the search query to prevent SQL injection
     $searchQuery = mysqli_real_escape_string($conn, $searchQuery);
 
@@ -599,7 +594,7 @@ function countSearchBooks($conn, $searchQuery) {
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
-        echo "Can't retrieve data: " . mysqli_error($conn);
+        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
         exit;
     }
 

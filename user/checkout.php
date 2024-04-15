@@ -1,11 +1,11 @@
 <?php
 $title = "Blagajna";
-require "./template/header.php";
+require "../header.php";
 
 // Check if the user is logged in
 checkLoggedIn();
 
-$conn=dbConnect();
+$conn = dbConnect();
 
 // košarica potrebuje seje, da se začne ena
 /*
@@ -20,7 +20,7 @@ $conn=dbConnect();
 
 if (isset($_SESSION['cart']) && (array_count_values($_SESSION['cart']))) {
 
-    require_once 'template/cartnoedit.php';
+    require_once './cartlayoutnoedit.php';
 ?>
     <!-- Obrazec za uporabnikove podrobnosti in gumb za nakup -->
     <!-- Forma za zbiranje podrobnosti uporabnika -->
@@ -77,5 +77,5 @@ if (isset($_SESSION['cart']) && (array_count_values($_SESSION['cart']))) {
 } else {
     echo "<p class=\"text-warning\">Vaša košarica je prazna!</p>";
 }
-require_once "./template/footer.php";
+require_once "../footer.php";
 ?>

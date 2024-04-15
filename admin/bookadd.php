@@ -1,8 +1,8 @@
 <?php
-$title = "Add new book";
-require "../template/header.php";
+$title = "Dodajanje knjige";
+require "../header.php";
 checkAdmin();
-$conn=dbConnectAdmin();
+$conn = dbConnectAdmin();
 
 if (isset($_POST['add'])) {
     // Get the book data from the form
@@ -14,9 +14,10 @@ if (isset($_POST['add'])) {
     $newPublisherName = mysqli_real_escape_string($conn, trim($_POST['new_publisher']));
     $descr = mysqli_real_escape_string($conn, trim($_POST['descr']));
     $price = floatval(trim($_POST['price']));
+    $pub_date = mysqli_real_escape_string($conn, trim($_POST['pub_date'])); // Add this line to get pub_date
 
     // Validate input
-    if (empty($isbn) || empty($title) || empty($authorId) || empty($publisher) || empty($descr) || empty($price)) {
+    if (empty($isbn) || empty($title) || empty($authorId) || empty($publisher) || empty($descr) || empty($price) || empty($pub_date)) {
         echo "All fields are required";
         exit;
     }
@@ -122,7 +123,7 @@ if (isset($_POST['add'])) {
     }
 
     // Insert the book into the database
-    $query = "INSERT INTO book (book_isbn, book_title, author_id, book_image, book_descr, book_price, publisher_id, date_added) VALUES ('$isbn', '$title', '$authorId', '$image', '$descr', '$price', '$publisherId', NOW())";
+    $query = "INSERT INTO book (book_isbn, book_title, author_id, book_image, book_descr, book_price, publisher_id, date_added, book_pub_date) VALUES ('$isbn', '$title', '$authorId', '$image', '$descr', '$price', '$publisherId', NOW(), '$pub_date')";
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
@@ -168,11 +169,11 @@ if (isset($_POST['add'])) {
             <td><input type="text" name="isbn" required></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Title</th>
+            <th style="vertical-align: middle;">Naslov</th>
             <td><input type="text" name="title" required></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Author</th>
+            <th style="vertical-align: middle;">Avtor</th>
             <td>
                 <select name="author" required>
                     <option value="new_author" selected>DODAJ NOVI AVTOR</option>
@@ -192,7 +193,7 @@ if (isset($_POST['add'])) {
             </td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Publisher</th>
+            <th style="vertical-align: middle;">Založnik</th>
             <td>
                 <select name="publisher" required>
                     <option value="new_publisher" selected>DODAJ NOVI ZALOŽNIK</option>
@@ -211,33 +212,32 @@ if (isset($_POST['add'])) {
             </td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Image</th>
+            <th style="vertical-align: middle;">Datum izdaje</th>
+            <td><input type="date" name="pub_date" required></td>
+        </tr>
+        <tr>
+            <th style="vertical-align: middle;">Slika</th>
             <td><input type="file" name="image" accept="image/*"></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Description</th>
+            <th style="vertical-align: middle;">Opis</th>
             <td><textarea id="descriptionTextarea" name="descr" cols="60" rows="5"></textarea></td>
         </tr>
         <tr>
-            <th style="vertical-align: middle;">Price</th>
+            <th style="vertical-align: middle;">Cena</th>
             <td><input type="text" name="price" required></td>
         </tr>
         <tr>
             <td colspan="2">
                 <input type="submit" name="add" value="Dodaj knjigo" class="btn btn-success">
                 <input type="reset" value="Ponastavi" class="btn btn-danger">
-                <button type="button" class="btn btn-default" onclick="goBack()">Nazaj</button>
+                <a href="book.php" type="button" class="btn btn-default">Nazaj</a>
             </td>
         </tr>
     </table>
 </form>
 
-<script>
-    // Function to go back to the previous page
-    function goBack() {
-        window.history.back();
-    }
-</script>
+
 <script>
     // Function to toggle visibility and position of the input for writing new author or publisher
     function toggleNewInput(selectElement, inputElement) {
@@ -283,5 +283,5 @@ if (isset($_POST['add'])) {
     window.addEventListener('load', autoResizeInputs);
 </script>
 <?php
-require_once "../template/footer.php";
+require_once "../footer.php";
 ?>

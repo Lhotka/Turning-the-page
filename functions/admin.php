@@ -9,7 +9,7 @@ function isAdmin()
 function checkAdmin()
 {
     if (!isAdmin()) {
-        header("Location: ../login.php");
+        header("Location: ../user/login.php");
         exit();
     }
 }

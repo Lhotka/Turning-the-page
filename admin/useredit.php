@@ -1,6 +1,6 @@
 <?php
-$title = "Edit User";
-require_once "../template/header.php";
+$title = "Uredi uporabnika";
+require_once "../header.php";
 checkAdmin();
 $conn = dbConnectAdmin();
 
@@ -57,9 +57,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
 ?>
 
 <div class="container">
-    <h2>Edit User</h2>
+    <h2>Uredi uporabnika</h2>
 
-    <!-- Edit User Form -->
+    <!-- Obrazec za urejanje uporabnika -->
     <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?userid=' . $userid; ?>" enctype="multipart/form-data">
         <?php if (!empty($errors)) : ?>
             <div class="alert alert-danger" role="alert">
@@ -72,23 +72,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
         <?php endif; ?>
 
         <div class="form-group">
-            <label for="newUsername">Username:</label>
+            <label for="newUsername">Uporabniško ime:</label>
             <input type="text" name="newUsername" class="form-control" value="<?php echo $user['username']; ?>" required>
         </div>
         <div class="form-group">
-            <label for="newEmail">Email:</label>
+            <label for="newEmail">E-pošta:</label>
             <input type="email" name="newEmail" class="form-control" value="<?php echo $user['email']; ?>" required>
         </div>
         <div class="form-group">
-            <label for="newUserType">User Type:</label>
+            <label for="newUserType">Vrsta uporabnika:</label>
             <select name="newUserType" class="form-control">
-                <option value="user" <?php echo ($user['user_type'] == 'user') ? 'selected' : ''; ?>>User</option>
-                <option value="admin" <?php echo ($user['user_type'] == 'admin') ? 'selected' : ''; ?>>Admin</option>
+                <option value="user" <?php echo ($user['user_type'] == 'user') ? 'selected' : ''; ?>>Uporabnik</option>
+                <option value="admin" <?php echo ($user['user_type'] == 'admin') ? 'selected' : ''; ?>>Administrator</option>
             </select>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-success">Save changes</button>
-            <button type="reset" class="btn btn-danger">Reset</button>
+            <button type="submit" class="btn btn-success">Shrani spremembe</button>
+            <button type="reset" class="btn btn-danger">Ponastavi</button>
             <a href="user.php" class="btn btn-default">Nazaj</a>
         </div>
         <input type="hidden" name="action" value="edit">
@@ -96,5 +96,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
 </div>
 
 <?php
-require_once "../template/footer.php";
+require_once "../footer.php";
 ?>

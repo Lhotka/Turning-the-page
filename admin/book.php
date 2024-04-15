@@ -1,6 +1,6 @@
 <?php
 $title = "Upravljanje knjig";
-require_once "../template/header.php";
+require_once "../header.php";
 checkAdmin();
 $conn = dbConnectAdmin();
 
@@ -83,5 +83,5 @@ $result = getAllBooks($conn, $sortingOption, $booksPerPage, $offset);
 </div>
 
 <?php
-require_once "../template/footer.php";
+require_once "../footer.php";
 ?>

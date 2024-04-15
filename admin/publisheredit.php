@@ -1,8 +1,8 @@
 <?php
 $title = "Urejanje založnika";
-require_once "../template/header.php";
+require_once "../header.php";
 checkAdmin();
-$conn=dbConnectAdmin();
+$conn = dbConnectAdmin();
 
 if (isset($_GET['publisher_id'])) {
     $publisherid = $_GET['publisher_id'];
@@ -56,5 +56,5 @@ if (!$bookResult) {
 </form>
 
 <?php
-require_once "../template/footer.php";
+require_once "../footer.php";
 ?>

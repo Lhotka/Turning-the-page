@@ -1,6 +1,6 @@
 <?php
-$title = "Login verify";
-require_once "./template/header.php";
+$title = "Preverjanje prijave";
+require_once "../header.php";
 
 $conn = dbConnect();
 
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->num_rows > 0 && password_verify($password, $hashedPassword)) {
             // Password is correct, user is authenticated
 
-            
+
             // Set session variables
             $_SESSION['user_id'] = $userID;
             $_SESSION['user_email'] = $email; // Add this line to set user_email
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Redirect to the appropriate page based on user type
             if ($userType === 'admin') {
                 $_SESSION['admin'] = true;
-                header("Location: admin/admindash.php");
+                header("Location: ../admin/admindash.php");
                 exit();
             } else {
                 header("Location: userdash.php");
@@ -52,4 +52,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Please provide both email and password";
     }
 }
-require_once "./template/footer.php";
+require_once "../footer.php";

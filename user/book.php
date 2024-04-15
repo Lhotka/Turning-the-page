@@ -1,5 +1,5 @@
 <?php
-require_once "./functions/database_functions.php";
+require_once "../functions/database_functions.php";
 $book_isbn = $_GET['bookisbn'];
 
 $conn = dbConnect();
@@ -25,13 +25,13 @@ if (!$row) {
 }
 
 $title = $row['book_title'];
-require_once "./template/header.php";
+require_once "../header.php";
 ?>
 
 <p class="lead" style="margin: 25px 0"><a href="books.php">Vse knjige</a> > <?php echo $row['book_title']; ?></p>
 <div class="row">
     <div class="col-md-4 text-center">
-        <img style="width: 300px; height: auto;" class="img-responsive img-thumbnail" src="./bootstrap/img/<?php echo $row['book_image']; ?>">
+        <img style="width: 300px; height: auto;" class="img-responsive img-thumbnail" src="../bootstrap/img/<?php echo $row['book_image']; ?>">
     </div>
     <div class="col-md-6">
 
@@ -95,5 +95,5 @@ require_once "./template/header.php";
 </style>
 
 <?php
-require "./template/footer.php";
+require "../footer.php";
 ?>
