@@ -25,7 +25,7 @@ $result = getAllBooks($conn, $sortingOption, $booksPerPage, $offset);
 ?>
 <h2>Upravljanje knjig</h2>
 
-<p class="lead"><a href="bookadd.php">Dodaj novo knjigo</a></p>
+<p class="lead"><a href="bookadd.php">Dodaj knjigo</a></p>
 
 <!-- Sorting dropdown -->
 <form method="get">
@@ -61,7 +61,7 @@ $result = getAllBooks($conn, $sortingOption, $booksPerPage, $offset);
             <td style="vertical-align: middle;"><?php echo $row['book_isbn']; ?></td>
             <td style="vertical-align: middle;"><?php echo $row['book_title']; ?></td>
             <td style="vertical-align: middle;"><?php echo implode(', ', $authors); ?></td>
-            <td style="vertical-align: middle;"><?php echo getPubName($conn, $row['publisher_id']); ?></td>
+            <td style="vertical-align: middle;"><?php echo getPublisherName($conn, $row['publisher_id']); ?></td>
             <td style="vertical-align: middle;"><?php echo empty($row['book_descr']) ? 'PRAZNO' : countWords($row['book_descr']) . " besed"; ?></td>
             <td style="vertical-align: middle;"><?php echo $row['book_price'] . "€"; ?></td>
             <td style="vertical-align: middle;"><?php echo $row['book_quantity']; ?></td>

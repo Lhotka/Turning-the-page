@@ -248,7 +248,7 @@ if (isset($_POST['save_change'])) {
                     <?php
                     // Pridobi vse založnike iz baze podatkov
                     $allPublishers = getAllPublishers($conn);
-                    $originalPublisherName = getPubName($conn, $row['publisher_id']);
+                    $originalPublisherName = getPublisherName($conn, $row['publisher_id']);
 
                     // Zanke skozi založnike in napolnite spustni seznam
                     foreach ($allPublishers as $publisher) {

@@ -1,4 +1,5 @@
 <?php
+
 function isAdmin()
 {
     if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) {
@@ -6,6 +7,7 @@ function isAdmin()
     }
     return false;
 }
+
 function checkAdmin()
 {
     if (!isAdmin()) {

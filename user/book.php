@@ -52,7 +52,7 @@ require_once "../header.php";
             </tr>
             <tr>
                 <td>Založnik</td>
-                <td><?php echo getPubName($conn, $row['publisher_id']); ?></td>
+                <td><?php echo getPublisherName($conn, $row['publisher_id']); ?></td>
             </tr>
             <tr>
                 <td>Datum izdaje</td>

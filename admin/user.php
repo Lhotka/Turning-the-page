@@ -4,58 +4,36 @@ require_once "../header.php";
 checkAdmin();
 $conn = dbConnectAdmin();
 
-// Check if form submitted for user actions (add, edit, delete)
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['action'])) {
-        $action = $_POST['action'];
+// Handle user deletion if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'delete') {
+    // Retrieve user ID from POST data
+    $userid = $_POST['userid'];
 
-        switch ($action) {
-            case 'add':
-                // Handle user addition
-                // Retrieve and sanitize input data
-                $username = mysqli_real_escape_string($conn, $_POST['username']);
-                $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password for security
-
-                // Call function to insert user into the database
-                insertUser($conn, $username, $password);
-                break;
-
-            case 'edit':
-                // Handle user editing
-                // Retrieve and sanitize input data
-                $userid = $_POST['userid'];
-                $newUsername = mysqli_real_escape_string($conn, $_POST['newUsername']);
-                $newUserType = mysqli_real_escape_string($conn, $_POST['newUserType']);
-                // Call function to update user in the database
-                updateUser($conn, $userid, $newUsername, $newEmail, $newUserType);
-                break;
-
-            case 'delete':
-                // Handle user deletion
-                // Retrieve user ID from POST data
-                $userid = $_POST['userid'];
-
-                // Call function to delete user from the database
-                deleteUser($conn, $userid);
-                break;
-
-            default:
-                // Invalid action
-                break;
-        }
-    }
+    // Call function to delete user from the database
+    deleteUser($conn, $userid);
 }
 
-// Get all users from the database
-$users = getAllUsers($conn);
+// Pagination variables
+$usersPerPage = 1; // Number of users per page
+$totalUsers = countUsers($conn); // Get the total count of users
+$totalPages = ceil($totalUsers / $usersPerPage); // Calculate the total number of pages
+
+// Get the current page number from the query string
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+// Calculate the offset for the SQL query
+$offset = ($page - 1) * $usersPerPage;
+
+// Get users for the current page
+$users = getUsersForPage($conn, $usersPerPage, $offset);
+
 ?>
 
 <div class="container">
     <h2>Upravljanje uporabnikov</h2>
 
     <!-- Dodaj uporabnika -->
-    <p class="lead"><a href="useradd.php">Dodaj novega uporabnika</a></p>
-
+    <p class="lead"><a href="useradd.php">Dodaj uporabnika</a></p>
 
     <!-- Seznam uporabnikov -->
     <table class="table">
@@ -76,7 +54,6 @@ $users = getAllUsers($conn);
                     <td style="vertical-align: middle;">
                         <!-- Gumb za urejanje -->
                         <a href="useredit.php?userid=<?php echo $user['id']; ?>" class="btn btn-warning">Uredi</a>
-
                         <!-- Gumb za brisanje -->
                         <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="display: inline-block">
                             <input type="hidden" name="action" value="delete">
@@ -88,6 +65,13 @@ $users = getAllUsers($conn);
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <!-- Pagination -->
+    <ul class="pagination justify-content-center">
+        <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+            <li class="page-item <?php if ($i == $page) echo 'active'; ?>"><a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+        <?php endfor; ?>
+    </ul>
 </div>
 
 <?php

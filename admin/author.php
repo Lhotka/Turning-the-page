@@ -36,8 +36,14 @@ if (isset($_POST['delete_author'])) {
     }
 }
 
-// Fetch all authors with associated book count from the database
-$authors = getAllAuthorsWithBookCount($conn);
+// Pagination variables
+$totalAuthors = getAuthorsCount($conn); // Get the total number of authors
+$authorsPerPage = 10; // Set the number of authors per page
+$totalPages = ceil($totalAuthors / $authorsPerPage); // Calculate total number of pages
+$page = isset($_GET['page']) ? $_GET['page'] : 1; // Get the current page number
+$offset = ($page - 1) * $authorsPerPage; // Calculate the offset for the SQL query
+
+$authors = getAllAuthorsWithBookCount($conn, $authorsPerPage, $offset); // Get authors for the current page
 ?>
 
 <h2>Upravljanje Avtorjev</h2>
@@ -87,5 +93,12 @@ $authors = getAllAuthorsWithBookCount($conn);
         </tr>
     <?php } ?>
 </table>
+
+<!-- Pagination -->
+<ul class="pagination justify-content-center">
+    <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+        <li class="page-item <?php if ($i == $page) echo 'active'; ?>"><a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+    <?php endfor; ?>
+</ul>
 
 <?php require_once "../footer.php"; ?>

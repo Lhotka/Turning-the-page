@@ -1,12 +1,5 @@
 <?php
-/*
-		loop through array of $_SESSION['cart'][book_isbn] => number
-		get isbn => take from database => take book price
-		price * number (quantity)
-		return sum of price
-	*/
 
-// Modify the total_price() function to accept the $conn variable as an argument
 function total_price($conn, $cart)
 {
     $price = 0.0;
@@ -22,11 +15,6 @@ function total_price($conn, $cart)
     return $price;
 }
 
-/*
-		loop through array of $_SESSION['cart'][book_isbn] => number
-		$_SESSION['cart'] is associative array which is [book_isbn] => number of books for each book_isbn
-		calculate sum of books 
-	*/
 function total_items($cart)
 {
     $items = 0;
