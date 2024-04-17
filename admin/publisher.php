@@ -24,14 +24,24 @@ if (isset($_POST['add_publisher'])) {
 if (isset($_POST['delete_publisher'])) {
     $deletePublisherID = $_POST['delete_publisher_id'];
 
-    // Delete the selected publisher from the database
-    $deleteQuery = "DELETE FROM publisher WHERE publisher_id = '$deletePublisherID'";
-    $deleteResult = mysqli_query($conn, $deleteQuery);
+    // Check if the publisher is associated with any books
+    $bookCount = getPublisherBookCount($conn, $deletePublisherID);
 
-    if (!$deleteResult) {
-        echo "Napaka pri brisanju založnika: " . mysqli_error($conn);
+    if ($bookCount > 0) {
+        echo "Brisanje ni dovoljeno, ker je založnik povezan z knjigami.";
+    } else {
+        // Delete the selected publisher from the database
+        $deleteQuery = "DELETE FROM publisher WHERE publisher_id = '$deletePublisherID'";
+        $deleteResult = mysqli_query($conn, $deleteQuery);
+
+        if (!$deleteResult) {
+            echo "Napaka pri brisanju založnika: " . mysqli_error($conn);
+        } else {
+            echo "Založnik uspešno izbrisan!";
+        }
     }
 }
+
 
 //Pagination variables
 $totalPublishers = getPublishersCount($conn); // Get the total number of publishers
