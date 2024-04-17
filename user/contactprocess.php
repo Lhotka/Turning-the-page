@@ -2,11 +2,9 @@
 $title = "Procesiranje kontaktnega obrazca";
 require_once "../header.php";
 require '../vendor/autoload.php';
-//require_once __DIR__ . '/vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-//use PHPMailer\PHPMailer\SMTP;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset($_POST["textArea"])) {
     $userEmail = $_POST["inputEmail"];
@@ -50,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["inputEmail"]) && isset
 
         // Prejemniki
         $mail->setFrom($userEmail, $userEmail);
-        $mail->addAddress('filip.lhotka@gmail.com'); // E-poštni naslov skrbnika/prejemnika
+        $mail->addAddress($_ENV['GMAIL_USERNAME']);
 
         // Vsebina
         $mail->isHTML(true);

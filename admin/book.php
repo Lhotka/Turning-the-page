@@ -28,7 +28,7 @@ $result = getAllBooks($conn, $sortingOption, $booksPerPage, $offset);
 <p class="lead"><a href="bookadd.php">Dodaj knjigo</a></p>
 
 <!-- Sorting dropdown -->
-<form method="get">
+<form method="get" style="text-align:right">
     <label for="sort">Razvrsti po:</label>
     <select id="sort" name="sort" onchange="this.form.submit()">
         <option value="latest" <?php echo ($sortingOption === 'latest') ? 'selected' : ''; ?>>Najnovejše</option>

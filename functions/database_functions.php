@@ -18,62 +18,6 @@ function dbConnectAdmin()
     return $conn;
 }
 
-function checkAndResizeImage($sourcePath, $targetWidth)
-{
-    //Funkcija preveri in prilagodi sliko po potrebi, preveri tudi, ali je manjša od 5 MB
-
-    // Določite največjo velikost datoteke na 5 MB
-    $maxFileSizeBytes = 5 * 1024 * 1024; // 5 MB v bajtih
-
-    // Preveri velikost datoteke
-    if (filesize($sourcePath) > $maxFileSizeBytes) {
-        echo "Velikost datoteke presega dovoljeno omejitev velikosti.";
-        return;
-    }
-
-    //Širina slike
-    list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($sourcePath);
-
-    if ($sourceWidth > $targetWidth) {
-        $targetHeight = ($targetWidth / $sourceWidth) * $sourceHeight;
-
-        switch ($sourceType) {
-            case IMAGETYPE_JPEG:
-                echo '<br/>' . $sourcePath;
-                $sourceImage = imagecreatefromjpeg($sourcePath);
-                break;
-            case IMAGETYPE_PNG:
-                $sourceImage = imagecreatefrompng($sourcePath);
-                break;
-            case IMAGETYPE_GIF:
-                $sourceImage = imagecreatefromgif($sourcePath);
-                break;
-            default:
-                // Nepodprt tip slike
-                return;
-        }
-
-        $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
-
-        imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $sourceWidth, $sourceHeight);
-
-        switch ($sourceType) {
-            case IMAGETYPE_JPEG:
-                imagejpeg($targetImage, $sourcePath);
-                break;
-            case IMAGETYPE_PNG:
-                imagepng($targetImage, $sourcePath);
-                break;
-            case IMAGETYPE_GIF:
-                imagegif($targetImage, $sourcePath);
-                break;
-        }
-
-        imagedestroy($sourceImage);
-        imagedestroy($targetImage);
-    }
-}
-
 function getOrderId($conn, $id)
 {
     $query = "SELECT orderid FROM orders WHERE customerid = '$id'";
@@ -438,29 +382,6 @@ function countSearchBooks($conn, $searchQuery)
     return $row['count'];
 }
 
-function getUser($conn, $email, $password)
-{
-    $query = "SELECT id, password FROM user WHERE email = ?";
-    $stmt = mysqli_prepare($conn, $query);
-
-    if ($stmt) {
-        mysqli_stmt_bind_param($stmt, 's', $email);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_store_result($stmt);
-
-        if (mysqli_stmt_num_rows($stmt) > 0) {
-            mysqli_stmt_bind_result($stmt, $userID, $hashedPassword);
-            mysqli_stmt_fetch($stmt);
-
-            if (password_verify($password, $hashedPassword)) {
-                return $userID;
-            }
-        }
-    }
-
-    return null;
-}
-
 function getUserData($conn, $userid)
 {
     // Poizvedba za pridobitev podatkov uporabnika glede na uporabniški ID
@@ -487,29 +408,30 @@ function getUserData($conn, $userid)
     }
 }
 
-function getAllUsers($conn)
+function getUsers($conn, $usersPerPage, $offset)
 {
-    // Poizvedba za pridobitev vseh uporabnikov
-    $query = "SELECT * FROM user";
+    // Query to fetch users for the current page
+    $query = "SELECT * FROM user LIMIT $usersPerPage OFFSET $offset";
 
-    // Izvedba poizvedbe
+    // Execute the query
     $result = mysqli_query($conn, $query);
 
-    // Preveri, ali je izvedba poizvedbe uspešna
+    // Check if the query was successful
     if (!$result) {
-        // Če poizvedba ne uspe, prikaži sporočilo o napaki
-        echo "Ne morem pridobiti podatkov: " . mysqli_error($conn);
+        // If not successful, display an error message
+        echo "Ne morem pridobiti uporabnikov za trenutno stran: " . mysqli_error($conn);
         exit;
     }
 
-    // Inicializirajte matriko za shranjevanje podatkov uporabnikov
+    // Initialize an empty array to store users
     $users = array();
 
-    // Zanke skozi rezultat poizvedbe in pridobi podatke uporabnika
+    // Loop through the results and fetch each user
     while ($row = mysqli_fetch_assoc($result)) {
         $users[] = $row;
     }
 
+    // Return the array of users for the current page
     return $users;
 }
 
@@ -593,34 +515,6 @@ function countUsers($conn)
     return $row['total_users'];
 }
 
-function getUsersForPage($conn, $usersPerPage, $offset)
-{
-    // Query to fetch users for the current page
-    $query = "SELECT * FROM user LIMIT $usersPerPage OFFSET $offset";
-
-    // Execute the query
-    $result = mysqli_query($conn, $query);
-
-    // Check if the query was successful
-    if (!$result) {
-        // If not successful, display an error message
-        echo "Ne morem pridobiti uporabnikov za trenutno stran: " . mysqli_error($conn);
-        exit;
-    }
-
-    // Initialize an empty array to store users
-    $users = array();
-
-    // Loop through the results and fetch each user
-    while ($row = mysqli_fetch_assoc($result)) {
-        $users[] = $row;
-    }
-
-    // Return the array of users for the current page
-    return $users;
-}
-
-
 function countWords($text)
 {
     // Remove HTML tags and trim whitespaces
@@ -630,4 +524,60 @@ function countWords($text)
     $wordCount = str_word_count($cleanText);
 
     return $wordCount;
+}
+
+function checkAndResizeImage($sourcePath, $targetWidth)
+{
+    //Funkcija preveri in prilagodi sliko po potrebi, preveri tudi, ali je manjša od 5 MB
+
+    // Določite največjo velikost datoteke na 5 MB
+    $maxFileSizeBytes = 5 * 1024 * 1024; // 5 MB v bajtih
+
+    // Preveri velikost datoteke
+    if (filesize($sourcePath) > $maxFileSizeBytes) {
+        echo "Velikost datoteke presega dovoljeno omejitev velikosti.";
+        return;
+    }
+
+    //Širina slike
+    list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($sourcePath);
+
+    if ($sourceWidth > $targetWidth) {
+        $targetHeight = ($targetWidth / $sourceWidth) * $sourceHeight;
+
+        switch ($sourceType) {
+            case IMAGETYPE_JPEG:
+                echo '<br/>' . $sourcePath;
+                $sourceImage = imagecreatefromjpeg($sourcePath);
+                break;
+            case IMAGETYPE_PNG:
+                $sourceImage = imagecreatefrompng($sourcePath);
+                break;
+            case IMAGETYPE_GIF:
+                $sourceImage = imagecreatefromgif($sourcePath);
+                break;
+            default:
+                // Nepodprt tip slike
+                return;
+        }
+
+        $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
+
+        imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $sourceWidth, $sourceHeight);
+
+        switch ($sourceType) {
+            case IMAGETYPE_JPEG:
+                imagejpeg($targetImage, $sourcePath);
+                break;
+            case IMAGETYPE_PNG:
+                imagepng($targetImage, $sourcePath);
+                break;
+            case IMAGETYPE_GIF:
+                imagegif($targetImage, $sourcePath);
+                break;
+        }
+
+        imagedestroy($sourceImage);
+        imagedestroy($targetImage);
+    }
 }

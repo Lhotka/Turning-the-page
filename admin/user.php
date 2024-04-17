@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
 }
 
 // Pagination variables
-$usersPerPage = 1; // Number of users per page
+$usersPerPage = 10; // Number of users per page
 $totalUsers = countUsers($conn); // Get the total count of users
 $totalPages = ceil($totalUsers / $usersPerPage); // Calculate the total number of pages
 
@@ -25,7 +25,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $usersPerPage;
 
 // Get users for the current page
-$users = getUsersForPage($conn, $usersPerPage, $offset);
+$users = getUsers($conn, $usersPerPage, $offset);
 
 ?>
 

@@ -35,8 +35,8 @@ $totalPages = ceil($totalBooks / $booksPerPage);
 
 <p class="lead text-center text-muted">Vse knjige</p>
 
-<!-- Uporabi spustni meni za možnosti sortiranja -->
-<form method="get">
+<!-- Spustni meni za možnosti sortiranja -->
+<form method="get" style="text-align:right">
     <label for="sort">Razvrsti po:</label>
     <select id="sort" name="sort" onchange="this.form.submit()">
         <option value="latest" <?php echo ($sortingOption === 'latest') ? 'selected' : ''; ?>>Najnovejše</option>
