@@ -43,7 +43,7 @@ if (isset($_SESSION['user_id'])) {
                         <input type="password" id="pass" name="pass" class="form-control" required autocomplete="current-password">
                     </div>
                 </div>
-                <input type="submit" name="submit" class="btn btn-primary">
+            <input type="submit" name="submit" class="btn btn-primary" value="Potrdi">
             </form>
         </div>
 
@@ -69,7 +69,7 @@ if (isset($_SESSION['user_id'])) {
                         <input type="password" id="new_pass" name="new_pass" class="form-control" required autocomplete="new-password">
                     </div>
                 </div>
-                <input type="submit" name="register" class="btn btn-primary">
+                <input type="submit" name="register" class="btn btn-primary" value="Potrdi">
             </form>
         </div>
     </div>

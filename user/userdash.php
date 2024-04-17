@@ -2,6 +2,17 @@
 $title = "Uporabniška nadzorna plošča";
 require_once "../header.php";
 
+// Check if a message is passed in the URL
+if (isset($_GET['success_message'])) {
+    $message = $_GET['success_message'];
+    // Display the success message
+    echo '<div class="alert alert-success" role="alert" style="text-align:center;">' . $message . '</div>';
+} elseif (isset($_GET['error_message'])) {
+    $message = $_GET['error_message'];
+    // Display the error message
+    echo '<div class="alert alert-danger" role="alert" style="text-align:center;">' . $message . '</div>';
+}
+
 // Preusmeri na prijavno stran, če uporabnik ni prijavljen
 if (!isset($_SESSION['user_email'])) {
     header("Location: login.php");

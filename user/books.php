@@ -37,7 +37,7 @@ $totalPages = ceil($totalBooks / $booksPerPage);
 
 <!-- Spustni meni za možnosti sortiranja -->
 <form method="get" style="text-align:right">
-    <label for="sort">Razvrsti po:</label>
+    <label for="sort">Razvrščanje:</label>
     <select id="sort" name="sort" onchange="this.form.submit()">
         <option value="latest" <?php echo ($sortingOption === 'latest') ? 'selected' : ''; ?>>Najnovejše</option>
         <option value="popular" <?php echo ($sortingOption === 'popular') ? 'selected' : ''; ?>>Najbolj priljubljene</option>

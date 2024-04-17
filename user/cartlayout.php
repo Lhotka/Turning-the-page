@@ -27,7 +27,7 @@
             <th>Delež DDV (5%):</th>
             <th>&nbsp;</th>
             <th>&nbsp;</th>
-            <td><?php echo ($_SESSION['total_price'] * 0.05) . " €"; ?></td>
+            <td><?php echo number_format(($_SESSION['total_price'] * 0.05), 2) . " €"; ?></td>
         </tr>
     </table>
     <input type="submit" class="btn btn-default" name="save_change" value="Posodobi košarico">

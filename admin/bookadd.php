@@ -157,7 +157,14 @@ if (isset($_POST['add'])) {
             }
         }
 
-        header("Location: bookadd.php");
+        // Output success message
+        echo "Dodajanje knjige uspešno!";
+
+        // Redirect to book.php after 2 seconds
+        header("refresh:1; url=book.php");
+        exit;
+
+        //header("Location: bookadd.php");
     }
 }
 ?>

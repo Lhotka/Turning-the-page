@@ -68,13 +68,17 @@ if ($insertOrderResult) {
             exit;
         }
     }
-
     // Prikaži sporočilo o uspehu
-    echo '<div class="alert alert-success" role="alert" style="text-align:center;">Vaše naročilo je bilo uspešno obdelano.<br/>Prosimo, preverite svoj e-poštni nabiralnik za potrditev naročila in podrobnosti o dostavi!<br/>Vaša košarica je sedaj prazna.</div>';
+    $success_message = 'Vaše naročilo je bilo uspešno obdelano.<br/>Prosimo, preverite svoj e-poštni nabiralnik za potrditev naročila in podrobnosti o dostavi!<br/>Vaša košarica je sedaj prazna.';
+    // Prazni košarico po uspešnem naročilu
+    unset($_SESSION['cart']);
+    // Redirect user to userdash.php after successful order
+    header("Location: userdash.php?success_message=" . urlencode($success_message));
+    exit();
 } else {
     // Prikaži sporočilo o napaki
-    echo '<div class="alert alert-danger" role="alert" style="text-align:center;">Prišlo je do napake pri obdelavi vašega naročila. Prosimo, poskusite znova ali stopite v stik s podporo.</div>';
+    $error_message = 'Prišlo je do napake pri obdelavi vašega naročila.<br/>Prosimo, poskusite znova ali stopite v stik s podporo.';
+    echo '<div class="alert alert-danger" role="alert" style="text-align:center;">' . $error_message . '</div>';
+    header("Location: userdash.php?error_message=" . urlencode($error_message));
+    exit();
 }
-
-require_once "../footer.php";
-?>
