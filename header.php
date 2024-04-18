@@ -79,7 +79,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
                     <?php endif; ?>
                 </ul>
                 <!-- Iskalna vrstica -->
-                <form class="navbar-form navbar-left" action="<?php echo $baseUrl; ?>/books.php" method="get">
+                <form class="navbar-form navbar-left" action="<?php echo $baseUrl; ?>/user/books.php" method="get">
                     <div class="form-group" style="margin: 5px;">
                         <input type="text" class="form-control" name="q" placeholder="Iskanje" value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
                     </div>
