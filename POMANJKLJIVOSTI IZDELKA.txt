@@ -40,3 +40,7 @@ Your order has been processed successfully.
     these two are missing
 
 Ko nekdo kupi izdelek, se mora zaloga zmanjšati.
+
+
+
+Prikaz knjig - velikost croppi na vseh prikazih

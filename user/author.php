@@ -29,17 +29,24 @@ if (isset($_GET['name'])) {
 
         <h3>Knjige:</h3>
         <div class="row">
-            <?php while ($vrsticaKnjige = mysqli_fetch_assoc($rezultatKnjige)) { ?>
+            <?php while ($query_row = mysqli_fetch_assoc($rezultatKnjige)) { ?>
                 <div class="col-md-3 text-center">
-                    <a href="book.php?bookisbn=<?php echo $vrsticaKnjige['book_isbn']; ?>">
-                        <img class="img-responsive img-thumbnail" style="margin: 10px;" src="../bootstrap/img/<?php echo $vrsticaKnjige['book_image']; ?>">
-                        <p><strong><?php echo $vrsticaKnjige['book_title']; ?></strong></p>
+                    <a href="book.php?bookisbn=<?php echo $query_row['book_isbn']; ?>" class="book-link">
+                        <img class="img-responsive img-thumbnail book-cover" src="../bootstrap/img/<?php echo $query_row['book_image']; ?>" alt="<?php echo $query_row['book_title']; ?>">
+                        <p style="margin:10px"><strong><?php echo $query_row['book_title']; ?></strong></p>
                     </a>
                 </div>
             <?php } ?>
         </div>
 
-
+        <style>
+            .book-cover {
+                height: auto;
+                /* Automatically adjust height to maintain aspect ratio */
+                max-height: 300px;
+                /* Optional: Set a maximum height to prevent excessive stretching */
+            }
+        </style>
 <?php
     } else {
         echo "<p>Avtor ni bil najden</p>";

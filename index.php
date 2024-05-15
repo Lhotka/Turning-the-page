@@ -34,9 +34,9 @@ $totalPages = ceil($totalBooks / $booksPerPage);
         }
     ?>
         <div class="col-md-3 text-center">
-            <a href="user/book.php?bookisbn=<?php echo $query_row['book_isbn']; ?>">
-                <img class="img-responsive img-thumbnail" style="margin: 10px;" src="./bootstrap/img/<?php echo $query_row['book_image']; ?>">
-                <p><strong><?php echo $query_row['book_title']; ?></strong></p>
+            <a href="user/book.php?bookisbn=<?php echo $query_row['book_isbn']; ?>" class="book-link">
+                <img class="img-responsive img-thumbnail book-cover" src="./bootstrap/img/<?php echo $query_row['book_image']; ?>" alt="<?php echo $query_row['book_title']; ?>">
+                <p style="margin:10px"><strong><?php echo $query_row['book_title']; ?></strong></p>
                 <?php
                 foreach ($avtorji as $avtor) {
                     echo '<a href="user/author.php?name=' . urlencode($avtor) . '">' . $avtor . '</a>';
@@ -58,6 +58,15 @@ $totalPages = ceil($totalBooks / $booksPerPage);
     }
     ?>
 </div>
+
+<style>
+    .book-cover {
+        height: auto;
+        /* Automatically adjust height to maintain aspect ratio */
+        max-height: 300px;
+        /* Optional: Set a maximum height to prevent excessive stretching */
+    }
+</style>
 
 <?php
 require_once "./footer.php";

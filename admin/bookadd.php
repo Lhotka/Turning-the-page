@@ -63,49 +63,52 @@ if (isset($_POST['add'])) {
     }
 
 
-    // Initialize $image
-    $image = "";
+
+
+    // Image handling
+    $image = ''; // Default empty image value
 
     if (isset($_FILES['image']) && $_FILES['image']['name'] != "") {
         $imageFile = $_FILES['image'];
-        $imageInfo = getimagesize($imageFile['tmp_name']);
 
-        // Check if the file is a valid image
-        if ($imageInfo === false) {
-            echo "Invalid image file";
+        // Check the uploaded file
+        if ($imageFile['error'] !== UPLOAD_ERR_OK) {
+            echo "Image upload failed with error code: " . $imageFile['error'];
             exit;
         }
 
-        $imageType = $imageInfo[2];
-
-        // Check if the image type is supported (1 = GIF, 2 = JPG, 3 = PNG)
-        if (!in_array($imageType, [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
-            echo "Unsupported image type";
+        // Check the image 
+        if (!checkImage($imageFile['tmp_name'])) {
+            echo "Image check failed";
             exit;
         }
 
-        // Set the file extension based on the image type
-        $allowedExtensions = [
-            IMAGETYPE_GIF => "gif",
-            IMAGETYPE_JPEG => "jpeg",
-            IMAGETYPE_PNG => "png"
-        ];
-
-        $fileExtension = $allowedExtensions[$imageType];
-
-        // Generate a new file name
-        $originalName = pathinfo($imageFile['name'], PATHINFO_FILENAME);
-        $image = $originalName . 'Crop' . '.' . $fileExtension;
-
-        // Move the original image
-        $directorySelf = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
+        // Move the uploaded image to the target directory
         $uploadDirectory = "../bootstrap/img/";
-        $originalImagePath = $uploadDirectory . $image;
-        move_uploaded_file($imageFile['tmp_name'], $originalImagePath);
+        $imageName = basename($imageFile['name']);
+        $targetPath = $uploadDirectory . $imageName;
 
-        // Check and resize the image if needed
-        checkAndResizeImage($originalImagePath, 200);
+        if (move_uploaded_file($imageFile['tmp_name'], $targetPath)) {
+            // Image upload successful
+            $image = $imageName; // Set image name to be saved in the database
+        } else {
+            echo "Error uploading image.";
+            exit;
+        }
     }
+
+    // Update book_image field only if a new image was uploaded
+    if (!empty($image)) {
+        $query = "UPDATE book SET book_image = '$image' WHERE book_isbn = '$isbn'";
+        $result = mysqli_query($conn, $query);
+
+        if (!$result) {
+            echo "Error updating book image: " . mysqli_error($conn);
+            exit;
+        }
+    }
+
+
 
     // Check if the selected author is 'new_author'
     if ($authorId == 'new_author' && !empty($newAuthorName)) {

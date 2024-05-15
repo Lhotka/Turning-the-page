@@ -14,9 +14,9 @@ $baseUrl = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/FINAL';
 $faviconPath = $baseUrl . '/bootstrap/img/favicon.ico';
 
 // Error reporting
-ini_set('display_errors', 0); // show errors - 1
-ini_set('display_startup_errors', 0);// show errors - 1
-error_reporting(0); // show errors - E_ALL
+ini_set('display_errors', 1); // show errors - 1
+ini_set('display_startup_errors', 1);// show errors - 1
+error_reporting(E_ALL); // show errors - E_ALL
 
 // Set session error flag
 $_SESSION['err'] = 1;

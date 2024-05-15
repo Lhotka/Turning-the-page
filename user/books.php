@@ -36,7 +36,7 @@ $totalPages = ceil($totalBooks / $booksPerPage);
 <p class="lead text-center text-muted">Vse knjige</p>
 
 <!-- Spustni meni za možnosti sortiranja -->
-<form method="get" style="text-align:right">
+<form method="get" style="text-align:right;margin-bottom:20px" >
     <label for="sort">Razvrščanje:</label>
     <select id="sort" name="sort" onchange="this.form.submit()">
         <option value="latest" <?php echo ($sortingOption === 'latest') ? 'selected' : ''; ?>>Najnovejše</option>
@@ -62,9 +62,9 @@ $totalPages = ceil($totalBooks / $booksPerPage);
             }
         ?>
             <div class="col-md-3 text-center">
-                <a href="book.php?bookisbn=<?php echo $query_row['book_isbn']; ?>">
-                    <img class="img-responsive img-thumbnail" style="margin: 10px;" src="../bootstrap/img/<?php echo $query_row['book_image']; ?>">
-                    <p><strong><?php echo $query_row['book_title']; ?></strong></p>
+                <a href="book.php?bookisbn=<?php echo $query_row['book_isbn']; ?>" class="book-link">
+                    <img class="img-responsive img-thumbnail book-cover" src="../bootstrap/img/<?php echo $query_row['book_image']; ?>" alt="<?php echo $query_row['book_title']; ?>">
+                    <p style="margin:10px"><strong><?php echo $query_row['book_title']; ?></strong></p>
                     <?php
                     foreach ($avtorji as $avtor) {
                         echo '<a href="author.php?name=' . urlencode($avtor) . '">' . $avtor . '</a>';
@@ -72,17 +72,18 @@ $totalPages = ceil($totalBooks / $booksPerPage);
                             echo ', ';
                         }
                     } ?>
+                </a>
             </div>
         <?php
             $count++;
             if ($count % 4 == 0) {
-                echo '</div><br>';
+                echo '</div><br/><br/>';
             }
         }
 
-        // Zapri zadnjo vrstico, če skupno število knjig ni večkratnik števila 4
+        // Close the last row if the total number of books is not a multiple of 4
         if ($count % 4 != 0) {
-            echo '</div><br>';
+            echo '</div><br/>';
         }
         ?>
     </div>
@@ -98,6 +99,27 @@ $totalPages = ceil($totalBooks / $booksPerPage);
         <?php endfor; ?>
     </ul>
 </div>
+
+<style>
+        .book-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%; /* Ensure the container occupies full height of its parent */
+    }
+
+    .book-image-wrapper {
+        flex: 1; /* Allow the image wrapper to expand to fill remaining space */
+        display: flex;
+        align-items: flex-end; /* Align the image to the bottom of its container */
+    }
+
+    .book-cover {
+        width: 100%; /* Ensure the image takes up 100% width of its container */
+        height: auto; /* Automatically adjust height to maintain aspect ratio */
+    }
+
+</style>
 
 <?php
 require_once "../footer.php";

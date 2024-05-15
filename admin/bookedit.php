@@ -128,49 +128,31 @@ if (isset($_POST['save_change'])) {
     if (isset($_FILES['image']) && $_FILES['image']['name'] != "") {
         // Process the new image only if it's uploaded
         $imageFile = $_FILES['image'];
-        $imageInfo = getimagesize($imageFile['tmp_name']);
 
-        // Check if the file is a valid image
-        if ($imageInfo === false) {
-            echo "Invalid image file";
+        // Check the uploaded file
+        if ($imageFile['error'] !== UPLOAD_ERR_OK) {
+            echo "Image upload failed with error code: " . $imageFile['error'];
             exit;
         }
 
-        $imageType = $imageInfo[2];
-
-        // Check if the image type is supported (1 = GIF, 2 = JPG, 3 = PNG)
-        if (!in_array($imageType, [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
-            echo "Unsupported image type";
+        // Check the image
+        if (!checkImage($imageFile['tmp_name'])) {
+            echo "Image check failed";
             exit;
         }
-
-        // Set the file extension based on the image type
-        $allowedExtensions = [
-            IMAGETYPE_GIF => "gif",
-            IMAGETYPE_JPEG => "jpeg",
-            IMAGETYPE_PNG => "png"
-        ];
-
-        $fileExtension = $allowedExtensions[$imageType];
-
-        // Generate a new file name
-        $originalName = pathinfo($imageFile['name'], PATHINFO_FILENAME);
-        $image = $originalName . 'Crop' . '.' . $fileExtension;
 
         // Move the original image
-        $directorySelf = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
         $uploadDirectory = "../bootstrap/img/";
+        $image = basename($imageFile['name']); // Use original filename
+
         $originalImagePath = $uploadDirectory . $image;
         move_uploaded_file($imageFile['tmp_name'], $originalImagePath);
 
-        // Check and resize the image if needed
-        checkAndResizeImage($originalImagePath, 200);
-
         // Update the book_image field only when a new image is uploaded
         $query = "UPDATE book SET  
-            book_image='$image'
-            WHERE book_isbn = '$isbn'
-        ";
+        book_image='$image'
+        WHERE book_isbn = '$isbn'
+    ";
 
         // Execute the query to update the book image in the database
         $result = mysqli_query($conn, $query);

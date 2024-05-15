@@ -526,58 +526,34 @@ function countWords($text)
     return $wordCount;
 }
 
-function checkAndResizeImage($sourcePath, $targetWidth)
+function checkImage($sourcePath)
 {
-    //Funkcija preveri in prilagodi sliko po potrebi, preveri tudi, ali je manjša od 5 MB
+    $maxFileSizeBytes = 5 * 1024 * 1024; // 5 MB in bytes
 
-    // Določite največjo velikost datoteke na 5 MB
-    $maxFileSizeBytes = 5 * 1024 * 1024; // 5 MB v bajtih
-
-    // Preveri velikost datoteke
+    // Check file size
     if (filesize($sourcePath) > $maxFileSizeBytes) {
-        echo "Velikost datoteke presega dovoljeno omejitev velikosti.";
-        return;
+        echo "File size exceeds the allowed limit.";
+        return false;
     }
 
-    //Širina slike
-    list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($sourcePath);
-
-    if ($sourceWidth > $targetWidth) {
-        $targetHeight = ($targetWidth / $sourceWidth) * $sourceHeight;
-
-        switch ($sourceType) {
-            case IMAGETYPE_JPEG:
-                echo '<br/>' . $sourcePath;
-                $sourceImage = imagecreatefromjpeg($sourcePath);
-                break;
-            case IMAGETYPE_PNG:
-                $sourceImage = imagecreatefrompng($sourcePath);
-                break;
-            case IMAGETYPE_GIF:
-                $sourceImage = imagecreatefromgif($sourcePath);
-                break;
-            default:
-                // Nepodprt tip slike
-                return;
-        }
-
-        $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
-
-        imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $sourceWidth, $sourceHeight);
-
-        switch ($sourceType) {
-            case IMAGETYPE_JPEG:
-                imagejpeg($targetImage, $sourcePath);
-                break;
-            case IMAGETYPE_PNG:
-                imagepng($targetImage, $sourcePath);
-                break;
-            case IMAGETYPE_GIF:
-                imagegif($targetImage, $sourcePath);
-                break;
-        }
-
-        imagedestroy($sourceImage);
-        imagedestroy($targetImage);
+    // Check if the file is an image
+    if (!getimagesize($sourcePath)) {
+        echo "File is not an image.";
+        return false;
     }
+
+    // Check for viruses (placeholder function)
+    if (isVirus($sourcePath)) {
+        echo "File contains viruses.";
+        return false;
+    }
+
+    // All checks passed
+    return true;
+}
+function isVirus($sourcePath)
+{
+    // Implement virus scanning logic here
+    // For now, assume no viruses
+    return false;
 }
