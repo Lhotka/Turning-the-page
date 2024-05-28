@@ -1,0 +1,46 @@
+ADD
+filter/query by author ...
+reviews
+user dashboard settings
+Admin dashboard - Order management   complete order.php
+slovenscina
+Type of book / categories, filters
+ISBN same format for all? (9780141036144)
+Length: 336 pages
+Dimensions: 181mm x 20mm x 111mm
+Weight: 184g
+Multiple authors for one book
+popust (knjiga ali stranka št nakupov)
+način plačila v tabelo orders
+save carts to accounts instead of sessions
+sortiranje gori doli (kot gump opcija)
+admin sorting books by columns
+
+FIX
+shipping - ship_country (raje izbira namesto vnosa)
+
+FINISH
+publisher edit complete
+user edit page complete
+dopolni footer
+
+MySQL user:
+CREATE USER 'username'@'localhost' IDENTIFIED BY 'Q$UGk8vGjuf#dXtkx8gh';
+
+GRANT ALL PRIVILEGES ON database_name.* TO 'new_user'@'localhost';
+
+
+session start šele ko naredi uspesen login
+probi vse names dinamicni fiksno
+...
+
+Your order has been processed successfully. 
+    Please check your email to get your order confirmation and shipping details!
+     Your cart is now empty !! also so the user cant just reload the order processing page
+    these two are missing
+
+Ko nekdo kupi izdelek, se mora zaloga zmanjšati.
+
+
+
+Prikaz knjig - velikost croppi na vseh prikazih
