@@ -15,7 +15,7 @@ $faviconPath = $baseUrl . '/bootstrap/img/favicon.ico';
 
 // Error reporting
 ini_set('display_errors', 1); // show errors - 1
-ini_set('display_startup_errors', 1);// show errors - 1
+ini_set('display_startup_errors', 1); // show errors - 1
 error_reporting(E_ALL); // show errors - E_ALL
 
 // Set session error flag
@@ -54,7 +54,19 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
     <!-- Kreditne kartice za ikone -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-
+    <style>
+        body {
+            padding-top: 0; /* Reset any body padding */
+        }
+        .navbar-fixed-top {
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+        #main {
+            margin-top: 0; /* Reset any main margin */
+        }
+    </style>
 </head>
 
 <body>
@@ -80,11 +92,14 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
                 </ul>
                 <!-- Iskalna vrstica -->
                 <form class="navbar-form navbar-left" action="<?php echo $baseUrl; ?>/user/books.php" method="get">
-                    <div class="form-group" style="margin: 5px;">
-                        <input type="text" class="form-control" name="q" placeholder="Iskanje" value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
+                    <div class="form-group" style="margin: 5px; display: flex; align-items: center;">
+                        <input type="text" class="form-control" name="q" placeholder="Iskanje" value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>" style="flex-grow: 1;">
+                        <button type="submit" class="btn btn-default" style="margin-left: 5px;">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
-                    <button type="submit" class="btn btn-default" style="margin: 5px;">Iskanje</button>
                 </form>
+
                 <!-- Vsi drugi gumbi -->
                 <ul class="nav navbar-nav navbar-right" style="margin: 5px;">
                     <li><a href="<?php echo $baseUrl; ?>/user/books.php"><span class="glyphicon glyphicon-book"></span>&nbsp; Vse knjige</a></li>
@@ -96,4 +111,4 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
         </div>
     </nav>
 
-    <div class="container" id="main" style="padding-top: 80px;">
+    <div class="container" id="main" style="padding-top: 30px;">

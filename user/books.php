@@ -36,7 +36,7 @@ $totalPages = ceil($totalBooks / $booksPerPage);
 <p class="lead text-center text-muted">Vse knjige</p>
 
 <!-- Spustni meni za možnosti sortiranja -->
-<form method="get" style="text-align:right;margin-bottom:20px" >
+<form method="get" style="text-align:right;margin-bottom:20px">
     <label for="sort">Razvrščanje:</label>
     <select id="sort" name="sort" onchange="this.form.submit()">
         <option value="latest" <?php echo ($sortingOption === 'latest') ? 'selected' : ''; ?>>Najnovejše</option>
@@ -61,13 +61,15 @@ $totalPages = ceil($totalBooks / $booksPerPage);
                 echo '<div class="row">';
             }
         ?>
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-center book-container">
                 <a href="book.php?bookisbn=<?php echo $query_row['book_isbn']; ?>" class="book-link">
-                    <img class="img-responsive img-thumbnail book-cover" src="../bootstrap/img/<?php echo $query_row['book_image']; ?>" alt="<?php echo $query_row['book_title']; ?>">
-                    <p style="margin:10px"><strong><?php echo $query_row['book_title']; ?></strong></p>
+                    <div class="book-image-wrapper" >
+                        <img class="img-responsive img-thumbnail book-cover" src="../bootstrap/img/<?php echo $query_row['book_image']; ?>" alt="<?php echo $query_row['book_title']; ?>">
+                    </div>
+                    <p style="margin:10px;color: black;"><strong><?php echo $query_row['book_title']; ?></strong></p>
                     <?php
                     foreach ($avtorji as $avtor) {
-                        echo '<a href="author.php?name=' . urlencode($avtor) . '">' . $avtor . '</a>';
+                        echo '<a style="color: gray;" href="author.php?name=' . urlencode($avtor) . '">' . $avtor . '</a>';
                         if (next($avtorji)) {
                             echo ', ';
                         }
@@ -101,24 +103,35 @@ $totalPages = ceil($totalBooks / $booksPerPage);
 </div>
 
 <style>
-        .book-container {
+    .book-container {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 100%; /* Ensure the container occupies full height of its parent */
+        height: 100%;
+        /* Ensure the container occupies full height of its parent */
     }
 
     .book-image-wrapper {
-        flex: 1; /* Allow the image wrapper to expand to fill remaining space */
+        flex: 1;
+        /* Allow the image wrapper to expand to fill remaining space */
         display: flex;
-        align-items: flex-end; /* Align the image to the bottom of its container */
+        justify-content: center;
+        align-items: flex-end;
+        /* Align the image to the bottom of its container */
     }
 
     .book-cover {
-        width: 100%; /* Ensure the image takes up 100% width of its container */
-        height: auto; /* Automatically adjust height to maintain aspect ratio */
+        width: 90%;
+        /* Ensure the image takes up 100% width of its container */
+        margin: auto;
+        /* Center */
+        height: auto;
+        /* Automatically adjust height to maintain aspect ratio */
     }
 
+    .book-details {
+        text-align: center;
+    }
 </style>
 
 <?php
